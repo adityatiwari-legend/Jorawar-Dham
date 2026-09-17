@@ -38,18 +38,26 @@ export default async function ContactPage({
 
   return (
     <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-      <div className="text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-3.5 py-1 rounded-full">
-          <MessageSquare className="w-3.5 h-3.5 text-saffron-600" />
-          <span>{locale === "hi" ? "संपर्क एवं सहायता" : "Contact & Support"}</span>
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
-          {locale === "hi" ? "श्री जोरावर धाम ट्रस्ट कार्यालय" : "Shri Jorawar Dham Trust Office"}
-        </h1>
+      <div className="flex flex-col items-center text-center space-y-4 border-b border-sandstone-300 pb-10">
+        <div className="p-2 bg-white rounded-2xl border border-sandstone-300 shadow-md">
+          <img
+            src="/branding/jorawar-dham-logo.png"
+            alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+            className="h-16 sm:h-20 w-auto object-contain rounded-lg"
+          />
+        </div>
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-4xl font-bold font-serif text-maroon-950">
+            {locale === "hi" ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti"}
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-saffron-800 font-semibold">
+            {locale === "hi" ? "पंजीकरण संख्या: COOP/2023/DHOLPUR/201054" : "Registration No.: COOP/2023/DHOLPUR/201054"}
+          </p>
+        </div>
         <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
           {locale === "hi"
-            ? "तीर्थ यात्रा मार्गदर्शन, धर्मशाला बुकिंग पूछताछ एवं सामान्य जानकारियों हेतु संपर्क सूत्र।"
-            : "Direct helpline for pilgrimage guidance, dharamshala accommodation inquiries, and general assistance."}
+            ? "तीर्थ यात्रा मार्गदर्शन, दर्शन पूछताछ एवं सामान्य जानकारियों हेतु अधिकृत संपर्क सूत्र।"
+            : "Official contact channels for pilgrimage guidance, darshan inquiries, and general assistance."}
         </p>
       </div>
 

@@ -42,15 +42,23 @@ export default async function DonationPage({
 
   return (
     <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-      {/* Header */}
-      <div className="text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-4 py-1 rounded-full">
-          <HeartHandshake className="w-3.5 h-3.5 text-saffron-600" />
-          <span>{isHi ? "धर्मार्थ दान एवं सहयोग" : "Charitable Contribution"}</span>
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
-          {isHi ? "श्री जोरावर धाम सेवा संकल्प" : "Support Shri Jorawar Dham Trust"}
-        </h1>
+      {/* Official Branding Header */}
+      <div className="flex flex-col items-center text-center space-y-4 border-b border-sandstone-300 pb-10">
+        <div className="p-2 bg-white rounded-2xl border border-sandstone-300 shadow-md">
+          <img
+            src="/branding/jorawar-dham-logo.png"
+            alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+            className="h-16 sm:h-22 w-auto object-contain rounded-lg"
+          />
+        </div>
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-4xl font-bold font-serif text-maroon-950">
+            {isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति — धर्मार्थ दान" : "Siddh Shri Jorawar Dham Seva Samiti — Sacred Donations"}
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-saffron-800 font-semibold">
+            {isHi ? "पंजीकरण संख्या: COOP/2023/DHOLPUR/201054" : "Registration No.: COOP/2023/DHOLPUR/201054"}
+          </p>
+        </div>
         <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
           {isHi
             ? "अन्नक्षेत्र, कामधेनु गौशाला, निःशुल्क चिकित्सा एवं मंदिर विकास हेतु अधिकृत दान सूचना।"

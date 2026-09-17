@@ -43,11 +43,16 @@ function TicketVerifyContent() {
       <div className="max-w-md w-full bg-white rounded-3xl border border-stone-200 shadow-xl overflow-hidden">
         {/* Sacred Header */}
         <div className="bg-gradient-to-r from-maroon-800 to-saffron-700 text-white p-6 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto mb-2 border border-white/20">
-            <ShieldCheck className="w-7 h-7 text-saffron-300" />
-          </div>
-          <h1 className="font-serif font-bold text-lg">श्री जोरावर धाम डिजिटल पास</h1>
+          <img
+            src="/branding/jorawar-dham-icon.png"
+            alt="सिद्ध श्री जोरावर धाम"
+            className="w-14 h-14 rounded-full object-contain mx-auto mb-2 border-2 border-gold-400/50 shadow-md"
+          />
+          <h1 className="font-serif font-bold text-lg">सिद्ध श्री जोरावर धाम डिजिटल पास</h1>
           <p className="text-xs text-saffron-200">आधिकारिक दर्शन एवं सेवा सत्यापन पोर्टल</p>
+          <p className="text-[10px] text-saffron-300/80 mt-0.5 font-mono">
+            सिद्ध श्री जोरावर धाम सेवा समिति (रजि. नं. COOP/2023/DHOLPUR/201054)
+          </p>
         </div>
 
         <div className="p-6">

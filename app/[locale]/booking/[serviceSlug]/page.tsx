@@ -520,18 +520,25 @@ export default function BookingWizardPage({
 
       {/* STEP 4: CONFIRMATION & QR TICKET */}
       {step === 4 && bookingResult && (
-        <div className="bg-white rounded-3xl border border-sandstone-200 p-8 sm:p-12 shadow-xl text-center space-y-8">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-10 h-10" />
+        <div className="bg-white rounded-3xl border border-sandstone-200 p-8 sm:p-12 shadow-xl text-center space-y-6">
+          <div className="flex justify-center">
+            <img
+              src="/branding/jorawar-dham-icon.png"
+              alt="सिद्ध श्री जोरावर धाम"
+              className="w-16 h-16 rounded-full object-contain border-2 border-gold-400/50 shadow-md"
+            />
           </div>
 
           <div className="space-y-2">
             <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
               {isHi ? "बुकिंग सफलतापूर्वक पुष्ट हुई" : "Booking Confirmed"}
             </span>
-            <h2 className="text-3xl font-bold font-serif text-maroon-950">
-              {isHi ? "श्री जोरावर धाम में आपका स्वागत है" : "Welcome to Shri Jorawar Dham"}
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-maroon-950">
+              {isHi ? "सिद्ध श्री जोरावर धाम में आपका स्वागत है" : "Welcome to Siddh Shri Jorawar Dham"}
             </h2>
+            <p className="text-[11px] text-stone-500 font-mono">
+              सिद्ध श्री जोरावर धाम सेवा समिति (रजि. नं. COOP/2023/DHOLPUR/201054)
+            </p>
             <p className="text-stone-600 text-sm">
               {isHi ? "आपका दर्शन/पूजा टिकट तैयार है। प्रवेश के समय यह क्यूआर कोड प्रस्तुत करें।" : "Your digital pass is ready. Please present this QR code at temple entry."}
             </p>

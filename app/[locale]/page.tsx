@@ -128,21 +128,23 @@ export default async function HomePage({
               </div>
             </div>
 
-            <div className="lg:col-span-5 bg-sandstone-100/80 rounded-2xl p-6 border border-sandstone-300 space-y-4">
-              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-inner bg-sandstone-200">
+            <div className="lg:col-span-5 bg-gradient-to-br from-sandstone-100 to-sandstone-200/80 rounded-2xl p-6 border border-sandstone-300 space-y-4 flex flex-col items-center justify-center text-center">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-gold-500 via-amber-300 to-saffron-500 shadow-gold-glow flex items-center justify-center">
                 <img
-                  src="/images/temple-mandap.jpg"
-                  alt="Shri Jorawar Dham Mandap"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  src="/branding/jorawar-dham-icon.png"
+                  alt="सिद्ध श्री जोरावर धाम"
+                  className="w-full h-full object-contain rounded-full bg-blue-950/90 p-1.5"
                 />
               </div>
               <div className="space-y-1">
-                <span className="text-xs font-bold text-saffron-800 uppercase tracking-wider block">
-                  {isHi ? "तीर्थ स्थल" : "Pilgrimage Sanctum"}
+                <span className="text-xs font-bold text-saffron-800 uppercase tracking-wider block font-serif">
+                  {isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti"}
                 </span>
-                <p className="text-xs text-stone-600">
-                  {isHi ? "चूरू ज़िला, शेखावाटी, राजस्थान (भारत)" : "Churu District, Shekhawati, Rajasthan (India)"}
+                <p className="text-xs text-stone-600 font-mono">
+                  {isHi ? "रजि. नं. COOP/2023/DHOLPUR/201054" : "Reg. No. COOP/2023/DHOLPUR/201054"}
+                </p>
+                <p className="text-xs text-stone-600 font-serif">
+                  {isHi ? "राजस्थान का पावन तीर्थ एवं साधना स्थली" : "Sacred Pilgrimage & Penance Ground, Rajasthan"}
                 </p>
               </div>
             </div>
@@ -215,13 +217,24 @@ export default async function HomePage({
                 key={service.id}
                 className="bg-white rounded-2xl border border-sandstone-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
               >
-                <div className="relative aspect-[16/9] bg-sandstone-100 overflow-hidden">
-                  <img
-                    src={service.imageUrl || "/images/temple-placeholder.jpg"}
-                    alt={isHi ? service.titleHi : service.titleEn}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                <div className="relative aspect-[16/9] bg-gradient-to-br from-maroon-950 via-maroon-900 to-saffron-950 overflow-hidden flex items-center justify-center">
+                  {service.imageUrl ? (
+                    <img
+                      src={service.imageUrl}
+                      alt={isHi ? service.titleHi : service.titleEn}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-3 text-center">
+                      <img
+                        src="/branding/jorawar-dham-icon.png"
+                        alt="सिद्ध श्री जोरावर धाम"
+                        className="w-14 h-14 rounded-full object-contain border border-gold-400/50 shadow-md mb-1.5 bg-blue-950/80 p-1"
+                      />
+                      <span className="text-[11px] text-gold-300 font-serif font-semibold">सिद्ध श्री जोरावर धाम</span>
+                    </div>
+                  )}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {service.price !== null && service.price > 0 ? (
                       <span className="text-xs font-bold bg-maroon-900 text-gold-300 px-2.5 py-1 rounded-full shadow">

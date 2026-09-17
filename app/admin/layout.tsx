@@ -96,11 +96,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-stone-100 flex flex-col lg:flex-row text-stone-900">
       {/* Mobile Header Bar */}
       <div className="lg:hidden bg-stone-900 text-white p-4 flex items-center justify-between border-b border-stone-800">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-saffron-600 flex items-center justify-center font-bold text-white text-sm">
-            JD
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/branding/jorawar-dham-icon.png"
+            alt="सिद्ध श्री जोरावर धाम"
+            className="w-8 h-8 rounded-full object-contain border border-gold-400/40 shadow-sm"
+          />
+          <div>
+            <span className="font-bold text-sm tracking-wide block leading-none font-serif">प्रशासन पोर्टल</span>
+            <span className="text-[10px] text-stone-400">Jorawar Dham CMS</span>
           </div>
-          <span className="font-bold text-sm tracking-wide">Jorawar Dham CMS</span>
         </div>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -118,19 +123,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div className="p-6 space-y-8">
           {/* Logo & Brand */}
-          <div className="space-y-1">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-saffron-500 to-maroon-700 flex items-center justify-center font-bold text-white shadow-md">
-                JD
-              </div>
-              <div>
-                <span className="block font-bold text-white text-sm tracking-wide">
-                  Jorawar Dham
-                </span>
-                <span className="block text-[11px] text-saffron-400 font-medium">
-                  Admin CMS Portal
-                </span>
-              </div>
+          <div className="space-y-2">
+            <Link href="/admin/dashboard" className="block">
+              <img
+                src="/branding/jorawar-dham-logo.png"
+                alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+                className="w-full h-auto max-h-12 object-contain rounded-lg border border-gold-500/30 bg-blue-950/50 p-1"
+              />
+            </Link>
+            <div className="flex items-center justify-between text-[11px] text-stone-400 px-1 font-mono">
+              <span>प्रशासन पोर्टल</span>
+              <span className="text-gold-400 font-semibold">CMS v2.0</span>
             </div>
           </div>
 

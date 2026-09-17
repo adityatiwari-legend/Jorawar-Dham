@@ -101,13 +101,24 @@ export default async function SevaPage({
               className="bg-white rounded-3xl border border-sandstone-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
             >
               {/* Image & Badges */}
-              <div className="relative aspect-[16/9] bg-sandstone-100 overflow-hidden">
-                <img
-                  src={service.imageUrl || "/images/temple-placeholder.jpg"}
-                  alt={isHi ? service.titleHi : service.titleEn}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="relative aspect-[16/9] bg-gradient-to-br from-maroon-950 via-maroon-900 to-saffron-950 overflow-hidden flex items-center justify-center">
+                {service.imageUrl ? (
+                  <img
+                    src={service.imageUrl}
+                    alt={isHi ? service.titleHi : service.titleEn}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-3 text-center">
+                    <img
+                      src="/branding/jorawar-dham-icon.png"
+                      alt="सिद्ध श्री जोरावर धाम"
+                      className="w-14 h-14 rounded-full object-contain border border-gold-400/50 shadow-md mb-1.5 bg-blue-950/80 p-1"
+                    />
+                    <span className="text-[11px] text-gold-300 font-serif font-semibold">सिद्ध श्री जोरावर धाम</span>
+                  </div>
+                )}
                 <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                   <span className={`text-xs font-semibold px-3 py-1 rounded-full border shadow-sm ${status.cls}`}>
                     {status.text}

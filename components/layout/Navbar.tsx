@@ -80,6 +80,13 @@ export default function Navbar({ locale }: NavbarProps) {
               <span>{isHi ? "दर्शन: प्रातः 5:00 - दोपहर 12:30 | सायं 4:00 - रात्रि 10:00" : "Darshan: 5:00 AM - 12:30 PM | 4:00 PM - 10:00 PM"}</span>
             </span>
             <Link
+              href={`/${locale}/auth/login`}
+              className="text-stone-300 hover:text-gold-400 transition-colors text-xs"
+            >
+              {isHi ? "दर्शनार्थी पोर्टल" : "Devotee Portal"}
+            </Link>
+            <span className="text-stone-600">|</span>
+            <Link
               href="/admin/login"
               className="text-stone-300 hover:text-gold-400 transition-colors text-xs underline decoration-stone-600"
             >
@@ -92,19 +99,29 @@ export default function Navbar({ locale }: NavbarProps) {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Temple Brand & Emblem */}
-          <Link href={`/${locale}`} className="flex items-center gap-3 group shrink-0">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-saffron-500 to-maroon-800 p-0.5 shadow-md flex items-center justify-center text-white">
-              <div className="w-full h-full rounded-full bg-maroon-900 flex items-center justify-center text-gold-400">
-                <Flame className="w-6 h-6" />
-              </div>
-            </div>
+          {/* Official Brand Identity */}
+          {/* Desktop & Tablet: Full Logo */}
+          <Link href={`/${locale}`} className="hidden sm:flex items-center group shrink-0">
+            <img
+              src="/branding/jorawar-dham-logo.png"
+              alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+              className="h-12 md:h-14 w-auto object-contain rounded-md"
+            />
+          </Link>
+
+          {/* Mobile: Sacred Icon + Trust Heading */}
+          <Link href={`/${locale}`} className="flex sm:hidden items-center gap-2.5 group shrink-0">
+            <img
+              src="/branding/jorawar-dham-icon.png"
+              alt="सिद्ध श्री जोरावर धाम"
+              className="h-10 w-10 object-contain rounded-full border border-gold-400/40 shadow-sm"
+            />
             <div>
-              <span className="block font-bold text-lg sm:text-xl text-maroon-950 tracking-tight leading-none group-hover:text-maroon-800 transition-colors font-serif">
-                {dict.site.name}
+              <span className="block font-serif font-bold text-sm text-maroon-950 leading-tight">
+                सिद्ध श्री जोरावर धाम
               </span>
-              <span className="block text-xs text-saffron-700 font-medium tracking-wide mt-0.5">
-                {isHi ? "आस्था • शक्ति • शांति" : "Faith • Strength • Peace"}
+              <span className="block text-[10px] text-saffron-700 font-medium">
+                {isHi ? "सेवा समिति" : "Seva Samiti"}
               </span>
             </div>
           </Link>
@@ -166,8 +183,15 @@ export default function Navbar({ locale }: NavbarProps) {
             </div>
           </nav>
 
-          {/* Language Switcher & Mobile Hamburger */}
-          <div className="flex items-center gap-3">
+          {/* Language Switcher, Devotee CTA & Mobile Hamburger */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <Link
+              href={`/${locale}/auth/login`}
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-maroon-950 bg-gradient-to-r from-gold-400 to-amber-500 hover:from-gold-500 hover:to-amber-600 shadow-sm transition-all"
+            >
+              <span>{isHi ? "श्रद्धालु सेवा" : "Devotee Portal"}</span>
+            </Link>
+
             <Suspense fallback={<div className="w-20 h-8 bg-stone-100 rounded-full animate-pulse" />}>
               <LanguageSwitcher currentLocale={locale} />
             </Suspense>
@@ -186,24 +210,51 @@ export default function Navbar({ locale }: NavbarProps) {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-sandstone-50 border-b border-sandstone-300 px-4 pt-2 pb-6 space-y-1 shadow-xl animate-in slide-in-from-top-2 max-h-[80vh] overflow-y-auto">
-          {allNavLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-maroon-900 text-white font-semibold shadow-sm"
-                    : "text-stone-800 hover:bg-sandstone-200"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+        <div className="xl:hidden bg-sandstone-50 border-b border-sandstone-300 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 max-h-[80vh] overflow-y-auto">
+          {/* Official Trust Identity Card in Mobile Drawer */}
+          <div className="flex items-center gap-3 p-3 mb-2 rounded-2xl bg-white border border-sandstone-300 shadow-sm">
+            <img
+              src="/branding/jorawar-dham-icon.png"
+              alt="सिद्ध श्री जोरावर धाम"
+              className="h-12 w-12 object-contain rounded-full border border-gold-400/50 shadow-sm shrink-0"
+            />
+            <div>
+              <div className="font-serif font-bold text-sm text-maroon-950 leading-tight">
+                सिद्ध श्री जोरावर धाम सेवा समिति
+              </div>
+              <div className="text-[10px] text-stone-500 font-mono mt-0.5">
+                रजि. नं. COOP/2023/DHOLPUR/201054
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href={`/${locale}/auth/login`}
+            onClick={() => setMobileMenuOpen(false)}
+            className="block w-full px-4 py-2.5 rounded-xl text-sm font-bold bg-saffron-600 text-white shadow-sm text-center"
+          >
+            {isHi ? "श्रद्धालु लॉगिन / पंजीकरण" : "Devotee Sign In / Register"}
+          </Link>
+
+          <div className="pt-1 space-y-1">
+            {allNavLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-maroon-900 text-white font-semibold shadow-sm"
+                      : "text-stone-800 hover:bg-sandstone-200"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </header>

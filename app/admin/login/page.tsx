@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Lock, User, AlertCircle, ShieldAlert, Sparkles, Loader2 } from "lucide-react";
 
 export default function AdminLoginPage() {
@@ -44,14 +45,15 @@ export default function AdminLoginPage() {
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ea580c_1px,transparent_1px)] [background-size:32px_32px]" />
 
       <div className="relative w-full max-w-md space-y-8">
-        {/* Header */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-saffron-500 to-maroon-800 shadow-xl border border-gold-500/30 text-white mx-auto">
-            <ShieldAlert className="w-8 h-8 text-gold-300" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white font-serif tracking-tight">
-            श्री जोरावर धाम
-          </h1>
+        {/* Official Brand Header */}
+        <div className="text-center space-y-4">
+          <Link href="/" className="inline-block">
+            <img
+              src="/branding/jorawar-dham-logo.png"
+              alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+              className="h-16 sm:h-20 w-auto object-contain rounded-xl border border-gold-500/30 shadow-2xl mx-auto bg-blue-950/50 p-1.5"
+            />
+          </Link>
           <p className="text-xs sm:text-sm text-stone-400 font-medium">
             Administrative Management & Operations Portal
           </p>

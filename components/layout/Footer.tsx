@@ -25,14 +25,17 @@ export default function Footer({ locale }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Trust Overview */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-gold-400 font-serif font-bold text-xl">
-              <Sparkles className="w-5 h-5 text-gold-400" />
-              <span>{dict.site.name}</span>
-            </div>
+            <Link href={`/${locale}`} className="inline-block">
+              <img
+                src="/branding/jorawar-dham-logo.png"
+                alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+                className="h-14 sm:h-16 w-auto object-contain rounded-lg border border-gold-500/30 shadow-md bg-blue-950/40 p-1"
+              />
+            </Link>
             <p className="text-xs sm:text-sm text-sandstone-300 leading-relaxed font-light">
               {dict.site.description}
             </p>
-            <div className="pt-2">
+            <div className="pt-1">
               <span className="inline-block bg-maroon-900 border border-gold-500/40 text-gold-300 text-xs px-3.5 py-1.5 rounded-full font-medium shadow-sm">
                 {dict.footer.trustName}
               </span>

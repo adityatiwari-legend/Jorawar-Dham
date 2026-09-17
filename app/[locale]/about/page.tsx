@@ -40,19 +40,27 @@ export default async function AboutPage({
 
   return (
     <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-      {/* Page Header */}
-      <div className="text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-3.5 py-1 rounded-full">
-          <Sparkles className="w-3.5 h-3.5 text-saffron-600" />
-          <span>{locale === "hi" ? "धाम परिचय" : "About Jorawar Dham"}</span>
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
-          {locale === "hi" ? "श्री जोरावर धाम तीर्थ ट्रस्ट" : "Shri Jorawar Dham Pilgrimage Trust"}
-        </h1>
+      {/* Official Trust Identity & Header */}
+      <div className="flex flex-col items-center text-center space-y-4 border-b border-sandstone-300 pb-10">
+        <div className="p-2 bg-white rounded-2xl border border-sandstone-300 shadow-md">
+          <img
+            src="/branding/jorawar-dham-logo.png"
+            alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+            className="h-16 sm:h-24 w-auto object-contain rounded-lg"
+          />
+        </div>
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-4xl font-bold font-serif text-maroon-950">
+            {locale === "hi" ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti"}
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-saffron-800 font-semibold">
+            {locale === "hi" ? "पंजीकरण संख्या: COOP/2023/DHOLPUR/201054" : "Registration No.: COOP/2023/DHOLPUR/201054"}
+          </p>
+        </div>
         <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
           {locale === "hi"
-            ? "राजस्थान के पावन शेखावाटी अंचल में स्थित, श्रद्धा, साधना एवं जनकल्याण का पावन केंद्र।"
-            : "Situated in the sacred Shekhawati region of Rajasthan, a timeless sanctuary of devotion, spiritual austerity, and community welfare."}
+            ? "राजस्थान के पावन अंचल में स्थित, श्रद्धा, साधना एवं जनकल्याण का पावन केंद्र।"
+            : "Situated in the sacred region of Rajasthan, a timeless sanctuary of devotion, spiritual austerity, and community welfare."}
         </p>
       </div>
 

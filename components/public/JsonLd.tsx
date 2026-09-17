@@ -11,15 +11,14 @@ export default function JsonLd({ locale }: JsonLdProps) {
   const templeSchema = {
     "@context": "https://schema.org",
     "@type": ["PlaceOfWorship", "HinduTemple"],
-    name: isHi ? "श्री जोरावर धाम" : "Shri Jorawar Dham",
-    alternateName: "Shri Jorawar Dham Teerth",
+    name: isHi ? "सिद्ध श्री जोरावर धाम" : "Siddh Shri Jorawar Dham",
+    alternateName: "सिद्ध श्री जोरावर धाम सेवा समिति",
     description: isHi
-      ? "राजस्थान के पावन शेखावाटी अंचल में स्थित परम पूज्य भगवान जोरावर जी महाराज का पावन तीर्थ एवं साधना स्थली।"
-      : "Sacred pilgrimage shrine and spiritual sanctuary of Param Pujya Bhagwan Jorawar Ji Maharaj in Churu, Rajasthan.",
+      ? "राजस्थान के पावन अंचल में स्थित परम पूज्य भगवान जोरावर जी महाराज का पावन तीर्थ एवं साधना स्थली।"
+      : "Sacred pilgrimage shrine and spiritual sanctuary of Param Pujya Bhagwan Jorawar Ji Maharaj in Rajasthan.",
     url: `${baseUrl}/${locale}`,
-    telephone: "+91-141-2345678",
-    email: "trust@jorawardham.org",
-    image: `${baseUrl}/images/temple-front.jpg`,
+    logo: `${baseUrl}/branding/jorawar-dham-logo.png`,
+    image: `${baseUrl}/branding/jorawar-dham-logo.png`,
     address: {
       "@type": "PostalAddress",
       streetAddress: "Shri Jorawar Dham",

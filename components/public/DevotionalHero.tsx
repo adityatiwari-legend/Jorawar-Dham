@@ -15,8 +15,17 @@ export default function DevotionalHero({ locale }: DevotionalHeroProps) {
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px]" />
 
       <div className="relative max-w-5xl mx-auto text-center space-y-8">
-        {/* Sacred Badge & Revered Motto */}
-        <div className="flex flex-col items-center gap-2">
+        {/* Sacred Brand Icon & Motto */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="relative">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 bg-gradient-to-tr from-gold-500 via-amber-300 to-saffron-500 shadow-gold-glow flex items-center justify-center">
+              <img
+                src="/branding/jorawar-dham-icon.png"
+                alt="सिद्ध श्री जोरावर धाम"
+                className="w-full h-full object-contain rounded-full bg-blue-950/90 p-1"
+              />
+            </div>
+          </div>
           <div className="inline-flex items-center gap-2 bg-maroon-900/80 border border-gold-500/50 px-4 py-1.5 rounded-full text-gold-300 text-xs sm:text-sm font-medium shadow-lg backdrop-blur-md">
             <Sparkles className="w-4 h-4 text-gold-400 animate-pulse" />
             <span>{dict.hero.badge}</span>

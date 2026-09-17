@@ -2,10 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "श्री जोरावर धाम | Shri Jorawar Dham",
-  description: "श्री जोरावर धाम, राजस्थान का पावन तीर्थ स्थल - दर्शन, आरती समय, एवं मंदिर समाचार।",
+  title: "सिद्ध श्री जोरावर धाम | Siddh Shri Jorawar Dham",
+  description: "सिद्ध श्री जोरावर धाम सेवा समिति, राजस्थान - दर्शन, आरती समय, सेवा एवं मंदिर समाचार।",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/branding/jorawar-dham-icon.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [
+      { url: "/branding/jorawar-dham-icon.png", type: "image/png" },
+    ],
+    shortcut: "/branding/jorawar-dham-icon.png",
   },
 };
 

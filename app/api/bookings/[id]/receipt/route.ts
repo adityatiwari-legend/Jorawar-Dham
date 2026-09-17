@@ -53,9 +53,10 @@ export async function GET(
         gatewayPaymentId: receipt.payment.gatewayPaymentId || "DIRECT_TRUST_SYSTEM",
         issuedAt: receipt.issuedAt,
         organization: {
-          nameHi: "श्री जोरावर धाम तीर्थ ट्रस्ट (पंजीकृत)",
-          nameEn: "Shri Jorawar Dham Pilgrimage Trust (Regd.)",
-          address: "श्री जोरावर धाम, ज़िला चूरू (राजस्थान) 331001",
+          nameHi: "सिद्ध श्री जोरावर धाम सेवा समिति",
+          nameEn: "Siddh Shri Jorawar Dham Seva Samiti",
+          registrationNo: "COOP/2023/DHOLPUR/201054",
+          address: "सिद्ध श्री जोरावर धाम, धौलपुर / राजस्थान",
           pan: "AABTS9284F",
           taxExemption80G: null, // Note: Darshan/Pooja Seva fees are not 80G tax deductible (applicable only to pure donations)
           receiptType: "SEVA_FEE",

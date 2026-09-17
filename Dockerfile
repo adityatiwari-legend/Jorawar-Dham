@@ -37,6 +37,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV PATH="/app/node_modules/.bin:$PATH"
 
 # Create unprivileged application user
 RUN addgroup --system --gid 1001 nodejs
@@ -45,13 +46,15 @@ RUN adduser --system --uid 1001 nextjs
 # Set up storage and public directories with secure ownership
 RUN mkdir -p /app/storage/uploads && chown -R nextjs:nodejs /app/storage
 
-# Copy build artifacts
+# Copy build artifacts and runtime dependencies
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/lib ./lib
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 

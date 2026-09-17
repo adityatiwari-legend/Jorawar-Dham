@@ -86,10 +86,16 @@ function DevoteeLoginContent({
       <div className="bg-white rounded-3xl border border-sandstone-200 shadow-xl overflow-hidden">
         {/* Top Header Banner */}
         <div className="bg-gradient-to-br from-maroon-950 to-maroon-900 text-white p-8 text-center space-y-3 relative">
-          <div className="w-12 h-12 rounded-full bg-gold-500/20 border border-gold-400/40 flex items-center justify-center mx-auto text-gold-300">
-            <Sparkles className="w-6 h-6" />
+          <div className="flex justify-center mb-1">
+            <Link href={`/${locale}`} className="inline-block">
+              <img
+                src="/branding/jorawar-dham-logo.png"
+                alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+                className="h-14 sm:h-16 w-auto object-contain rounded-lg border border-gold-400/40 shadow-md bg-blue-950/50 p-1"
+              />
+            </Link>
           </div>
-          <h1 className="text-2xl font-bold font-serif">
+          <h1 className="text-xl sm:text-2xl font-bold font-serif">
             {isHi ? "श्रद्धालु लॉगिन / पंजीकरण" : "Devotee Portal Sign In"}
           </h1>
           <p className="text-xs text-sandstone-200">

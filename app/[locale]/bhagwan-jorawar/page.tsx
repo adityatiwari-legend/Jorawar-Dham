@@ -42,19 +42,31 @@ export default async function BhagwanJorawarPage({
   return (
     <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
       {/* Header */}
-      <div className="text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-4 py-1 rounded-full">
-          <Sparkles className="w-3.5 h-3.5 text-saffron-600" />
-          <span>{isHi ? "दिव्य प्राकट्य एवं तपोलीला" : "Divine Incarnation & Penance"}</span>
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
-          {isHi ? "परम पूज्य भगवान जोरावर जी महाराज" : "Param Pujya Bhagwan Jorawar Ji Maharaj"}
-        </h1>
-        <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-          {isHi
-            ? "आस्था, शक्ति और परम शांति के प्रतीक — जिनका पावन सानिध्य जीवन के समस्त बंधनों और कष्टों का निवारण करता है।"
-            : "The supreme embodiment of Faith, Strength, and Peace — whose holy sanctuary liberates devotees from worldly afflictions."}
-        </p>
+      <div className="flex flex-col items-center text-center space-y-4 border-b border-sandstone-300 pb-10">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1 bg-gradient-to-tr from-gold-500 via-amber-300 to-saffron-500 shadow-gold-glow flex items-center justify-center">
+          <img
+            src="/branding/jorawar-dham-icon.png"
+            alt="सिद्ध श्री जोरावर धाम"
+            className="w-full h-full object-contain rounded-full bg-blue-950/90 p-1"
+          />
+        </div>
+        <div className="space-y-2">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-4 py-1 rounded-full">
+            <Sparkles className="w-3.5 h-3.5 text-saffron-600" />
+            <span>{isHi ? "दिव्य स्वरूप एवं तपोलीला" : "Divine Form & Penance"}</span>
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
+            {isHi ? "परम पूज्य भगवान जोरावर जी महाराज" : "Param Pujya Bhagwan Jorawar Ji Maharaj"}
+          </h1>
+          <p className="text-xs sm:text-sm font-mono text-saffron-800 font-semibold">
+            {isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti"}
+          </p>
+          <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
+            {isHi
+              ? "आस्था, शक्ति और परम शांति के प्रतीक — जिनका पावन सानिध्य जीवन के समस्त बंधनों और कष्टों का निवारण करता है।"
+              : "The supreme embodiment of Faith, Strength, and Peace — whose holy sanctuary liberates devotees from worldly afflictions."}
+          </p>
+        </div>
       </div>
 
       {/* Hero Narrative Card */}

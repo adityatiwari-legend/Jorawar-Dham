@@ -33,13 +33,38 @@ export async function generateMetadata({
         en: `${baseUrl}/en`,
       },
     },
+    icons: {
+      icon: [
+        { url: "/branding/jorawar-dham-icon.png", type: "image/png" },
+        { url: "/icon.png", type: "image/png" },
+        { url: "/favicon.ico" },
+      ],
+      apple: [
+        { url: "/branding/jorawar-dham-icon.png", type: "image/png" },
+      ],
+      shortcut: "/branding/jorawar-dham-icon.png",
+    },
     openGraph: {
       title: `${dict.site.name} - आस्था • शक्ति • शांति`,
       description: dict.site.description,
       url: `${baseUrl}/${locale}`,
-      siteName: dict.site.name,
+      siteName: "सिद्ध श्री जोरावर धाम सेवा समिति",
       locale: locale === "hi" ? "hi_IN" : "en_US",
       type: "website",
+      images: [
+        {
+          url: "/branding/jorawar-dham-logo.png",
+          width: 1024,
+          height: 202,
+          alt: "सिद्ध श्री जोरावर धाम सेवा समिति",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${dict.site.name} - आस्था • शक्ति • शांति`,
+      description: dict.site.description,
+      images: ["/branding/jorawar-dham-logo.png"],
     },
     robots: {
       index: true,

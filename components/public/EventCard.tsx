@@ -50,13 +50,24 @@ export default function EventCard({ event, locale }: EventCardProps) {
   return (
     <div className="bg-white rounded-3xl border border-sandstone-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col group">
       {/* Event Banner Image */}
-      <div className="relative aspect-[16/9] bg-sandstone-100 overflow-hidden">
-        <img
-          src={event.bannerImage || "/images/event-placeholder.jpg"}
-          alt={title || "Jorawar Dham Event"}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-        />
+      <div className="relative aspect-[16/9] bg-gradient-to-br from-maroon-950 via-maroon-900 to-saffron-950 overflow-hidden flex items-center justify-center">
+        {event.bannerImage ? (
+          <img
+            src={event.bannerImage}
+            alt={title || "Jorawar Dham Event"}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center p-4 text-center">
+            <img
+              src="/branding/jorawar-dham-icon.png"
+              alt="सिद्ध श्री जोरावर धाम"
+              className="w-16 h-16 rounded-full object-contain border-2 border-gold-400/50 shadow-md mb-2 bg-blue-950/80 p-1"
+            />
+            <span className="text-xs text-gold-300 font-serif font-semibold">सिद्ध श्री जोरावर धाम</span>
+          </div>
+        )}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2">
           <span className={`text-xs font-semibold px-3 py-1 rounded-full border shadow-sm ${statusBadge.cls}`}>
             {statusBadge.text}

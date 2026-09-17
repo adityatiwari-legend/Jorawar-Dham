@@ -117,6 +117,10 @@ export async function requestDevoteeOtp(
   // In development / test mode without real SMS provider configured, return testOtp so automated tests and developers can proceed safely
   const isDevOrTest = process.env.NODE_ENV !== "production" || process.env.ALLOW_TEST_OTP === "true";
 
+  if (isDevOrTest) {
+    logger.info(`[DEV / TEST OTP] Generated OTP for [${formatted}]: ${otp}`);
+  }
+
   return {
     success: true,
     message: "OTP आपके मोबाइल नंबर पर प्रेषित कर दिया गया है। (OTP sent successfully)",

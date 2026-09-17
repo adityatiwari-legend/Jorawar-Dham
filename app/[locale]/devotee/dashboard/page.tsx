@@ -150,9 +150,13 @@ export default function DevoteeDashboardPage({
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-stone-500">
-        <div className="w-8 h-8 border-2 border-saffron-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-sm">{isHi ? "लोड हो रहा है..." : "Loading Devotee Portal..."}</p>
+      <div className="py-20 text-center text-stone-500 space-y-3">
+        <img
+          src="/branding/jorawar-dham-icon.png"
+          alt="सिद्ध श्री जोरावर धाम"
+          className="w-14 h-14 rounded-full object-contain mx-auto animate-pulse border border-gold-400/40 shadow-sm"
+        />
+        <p className="text-sm font-medium">{isHi ? "श्रद्धालु पोर्टल लोड हो रहा है..." : "Loading Devotee Portal..."}</p>
       </div>
     );
   }
@@ -161,16 +165,23 @@ export default function DevoteeDashboardPage({
     <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
       {/* Devotee Greeting Banner */}
       <div className="bg-gradient-to-r from-maroon-950 via-maroon-900 to-saffron-950 text-white rounded-3xl p-6 sm:p-10 shadow-devotional flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-gold-300 text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-gold-400" />
-            <span>{isHi ? "श्रद्धालु सेवा संदर्शिका" : "Devotee Pilgrimage Account"}</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white">
-            {devotee?.fullName ? (isHi ? `सादर जय श्री जोरावर जी, ${devotee.fullName}` : `Welcome, ${devotee.fullName}`) : isHi ? "सादर जय श्री जोरावर जी" : "Welcome, Devotee"}
-          </h1>
-          <div className="flex items-center gap-4 text-xs text-sandstone-300 font-mono">
-            <span>📞 +91 {devotee?.phone}</span>
+        <div className="flex items-center gap-4">
+          <img
+            src="/branding/jorawar-dham-icon.png"
+            alt="सिद्ध श्री जोरावर धाम"
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-contain border-2 border-gold-400/50 shadow-md bg-blue-950/40 shrink-0"
+          />
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-gold-300 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-gold-400" />
+              <span>{isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti"}</span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold font-serif text-white">
+              {devotee?.fullName ? (isHi ? `सादर जय श्री जोरावर जी, ${devotee.fullName}` : `Welcome, ${devotee.fullName}`) : isHi ? "सादर जय श्री जोरावर जी" : "Welcome, Devotee"}
+            </h1>
+            <div className="flex items-center gap-4 text-xs text-sandstone-300 font-mono">
+              <span>📞 +91 {devotee?.phone}</span>
+            </div>
           </div>
         </div>
 
@@ -426,9 +437,17 @@ export default function DevoteeDashboardPage({
               <X className="w-4 h-4" />
             </button>
 
+            <div className="flex justify-center mb-1">
+              <img
+                src="/branding/jorawar-dham-icon.png"
+                alt="सिद्ध श्री जोरावर धाम"
+                className="w-12 h-12 rounded-full object-contain border border-gold-400/40 shadow-sm"
+              />
+            </div>
+
             <div className="space-y-1">
               <span className="text-[11px] font-bold uppercase tracking-wider text-saffron-700">
-                {isHi ? "श्री जोरावर धाम डिजिटल पास" : "Digital Entrance Pass"}
+                {isHi ? "सिद्ध श्री जोरावर धाम डिजिटल पास" : "Digital Entrance Pass"}
               </span>
               <h3 className="text-xl font-bold font-serif text-maroon-950">
                 {isHi ? viewingQrBooking.serviceTitleHi : viewingQrBooking.serviceTitleEn}
@@ -483,16 +502,26 @@ export default function DevoteeDashboardPage({
             </button>
 
             {/* Receipt Header */}
-            <div className="text-center space-y-1 border-b border-sandstone-200 pb-4">
+            <div className="text-center space-y-2 border-b border-sandstone-200 pb-4">
+              <div className="flex justify-center mb-1">
+                <img
+                  src="/branding/jorawar-dham-logo.png"
+                  alt="सिद्ध श्री जोरावर धाम सेवा समिति"
+                  className="h-12 sm:h-14 w-auto object-contain rounded-md"
+                />
+              </div>
               <span className="text-xs font-bold text-gold-600 tracking-widest block font-serif">
                 ॥ ॐ श्री जोरावर देवाय नमः ॥
               </span>
-              <h3 className="text-xl font-bold font-serif text-maroon-950">
+              <h3 className="text-lg font-bold font-serif text-maroon-950">
                 {viewingReceipt.organization.nameHi}
               </h3>
               <p className="text-xs text-stone-500">{viewingReceipt.organization.address}</p>
               <div className="pt-1 text-[11px] text-stone-600 font-mono">
-                <span>PAN: {viewingReceipt.organization.pan}</span> | <span>80G: {viewingReceipt.organization.taxExemption80G}</span>
+                <span>PAN: {viewingReceipt.organization.pan}</span>
+                {viewingReceipt.organization.taxExemption80G && (
+                  <span> | 80G: {viewingReceipt.organization.taxExemption80G}</span>
+                )}
               </div>
             </div>
 

@@ -26,6 +26,7 @@ COPY . .
 
 # Build standalone Next.js bundle
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder?schema=public"
 RUN npm run build
 
 # 4. Production Runner Stage
@@ -47,6 +48,8 @@ RUN mkdir -p /app/storage/uploads && chown -R nextjs:nodejs /app/storage
 # Copy build artifacts
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

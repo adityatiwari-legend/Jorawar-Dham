@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # 1. PostgreSQL Database
   postgres:
@@ -9,7 +7,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-jorawar_dham_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    expose:
+      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
@@ -17,8 +17,8 @@ services:
       - internal_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-jorawar_dham_db}"]
-      interval: 10s
-      timeout: 5s
+      interval: 5s
+      timeout: 3s
       retries: 5
 
   # 2. Next.js Web Application
@@ -31,26 +31,29 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    ports:
+      - "3000:3000"
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-jorawar_dham_db}?schema=public
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET}
-      DEVOTEE_SESSION_SECRET: ${DEVOTEE_SESSION_SECRET}
-      TICKET_QR_HMAC_SECRET: ${TICKET_QR_HMAC_SECRET}
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
-      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
-      NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID}
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://jorawardham.org}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-jorawar_dham_db}?schema=public
+      SESSION_SECRET: ${SESSION_SECRET:-6a457c13fbe71eddb8f417a5f73c215c5f08825da2db3d7781d7209921e20702}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:-6a457c13fbe71eddb8f417a5f73c215c5f08825da2db3d7781d7209921e20702}
+      DEVOTEE_SESSION_SECRET: ${DEVOTEE_SESSION_SECRET:-6a457c13fbe71eddb8f417a5f73c215c5f08825da2db3d7781d7209921e20702}
+      TICKET_QR_HMAC_SECRET: ${TICKET_QR_HMAC_SECRET:-42265e1f4b2cee3070e96ff0800dd77b7216fcca3ab9044b1713bda64650a115}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-6a457c13fbe71eddb8f417a5f73c215c5f08825da2db3d7781d7209921e20702}
+      CRON_SECRET: ${CRON_SECRET:-a1e9068c7469a4debe56e1205dfae30b91bb8b811d898aea}
+      OTP_SECRET_PEPPER: ${OTP_SECRET_PEPPER:-bee4f696d6de9d3ea2da3c8af2ed95b3e37bdc1293b1e895f1443bacd41f6330}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_placeholder}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-rzp_test_secret_placeholder}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-74469844307c75546e0ed178e32bf325b01bd9f0661a2fce}
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID:-rzp_test_placeholder}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     volumes:
       - media_storage:/app/storage/uploads
     networks:
       - internal_network
-    expose:
-      - "3000"
 
-  # 3. Nginx Reverse Proxy & TLS Termination
+  # 3. Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
     container_name: jorawar_dham_nginx
@@ -59,10 +62,8 @@ services:
       - app
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
       - media_storage:/var/www/uploads:ro
     networks:
       - internal_network

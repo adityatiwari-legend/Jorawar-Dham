@@ -6,9 +6,7 @@ import MobileQuickBar from "@/components/public/MobileQuickBar";
 import JsonLd from "@/components/public/JsonLd";
 import { Locale, LOCALES, isValidLocale, getDictionary } from "@/lib/utils/i18n";
 
-export async function generateStaticParams() {
-  return LOCALES.map((locale) => ({ locale }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

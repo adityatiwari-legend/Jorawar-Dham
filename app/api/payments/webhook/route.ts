@@ -4,6 +4,7 @@ import { getPaymentGateway } from "@/lib/payment/gateway";
 import { generateReceiptNumber, maskPhoneNumber } from "@/lib/booking/service";
 import { BookingStatus, PaymentStatus } from "@prisma/client";
 import { logger } from "@/lib/logger/logger";
+import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,8 +47,49 @@ export async function POST(req: NextRequest) {
       });
 
       if (!payment) {
-        logger.warn(`Webhook: No payment record found for order [${orderId}]`);
-        return NextResponse.json({ success: true, message: "Order not recognized" });
+        // Check if this webhook corresponds to a Donation order
+        const donation = await prisma.donation.findFirst({
+          where: { gatewayOrderId: orderId },
+        });
+
+        if (!donation) {
+          logger.warn(`Webhook: Neither payment nor donation found for order [${orderId}]`);
+          return NextResponse.json({ success: true, message: "Order not recognized" });
+        }
+
+        // Idempotency: If donation already marked PAID, return safe success
+        if (donation.status === PaymentStatus.PAID) {
+          logger.info(`Webhook idempotency: Donation [${donation.donationReference}] already confirmed and paid. Skipping duplicate.`);
+          return NextResponse.json({ success: true, message: "Already processed" });
+        }
+
+        const now = new Date();
+        const donationReceiptNum = donation.receiptNumber || `REC-DON-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`;
+
+        await prisma.$transaction(async (tx) => {
+          await tx.donation.update({
+            where: { id: donation.id },
+            data: {
+              status: PaymentStatus.PAID,
+              gatewayPaymentId: paymentId || donation.gatewayPaymentId,
+              receiptNumber: donationReceiptNum,
+              receiptIssuedAt: donation.receiptIssuedAt || now,
+              paidAt: donation.paidAt || now,
+            },
+          });
+
+          if (donation.causeId) {
+            await tx.donationCause.update({
+              where: { id: donation.causeId },
+              data: {
+                collectedAmountInPaise: { increment: donation.amountInPaise },
+              },
+            });
+          }
+        });
+
+        logger.info(`Webhook: Donation [${donation.donationReference}] marked PAID via webhook`);
+        return NextResponse.json({ success: true, status: "PROCESSED" });
       }
 
       // Idempotency Check: If already marked PAID, exit safely without duplicate processing
@@ -110,7 +152,13 @@ export async function POST(req: NextRequest) {
             rawGatewayResponse: payload,
           },
         });
-        logger.info(`Webhook: Order [${orderId}] marked FAILED`);
+        await prisma.donation.updateMany({
+          where: { gatewayOrderId: orderId, status: PaymentStatus.PENDING },
+          data: {
+            status: PaymentStatus.FAILED,
+          },
+        });
+        logger.info(`Webhook: Order [${orderId}] marked FAILED for payment/donation`);
       }
       return NextResponse.json({ success: true, status: "MARKED_FAILED" });
     }
@@ -146,6 +194,28 @@ export async function POST(req: NextRequest) {
             });
           });
           logger.info(`Webhook: Refund processed for payment [${rPaymentId}]`);
+        }
+
+        const donation = await prisma.donation.findFirst({
+          where: { gatewayPaymentId: rPaymentId },
+        });
+
+        if (donation && donation.status !== PaymentStatus.REFUNDED) {
+          await prisma.$transaction(async (tx) => {
+            await tx.donation.update({
+              where: { id: donation.id },
+              data: { status: PaymentStatus.REFUNDED },
+            });
+            if (donation.causeId) {
+              await tx.donationCause.update({
+                where: { id: donation.causeId },
+                data: {
+                  collectedAmountInPaise: { decrement: donation.amountInPaise },
+                },
+              });
+            }
+          });
+          logger.info(`Webhook: Refund processed for donation [${donation.donationReference}]`);
         }
       }
       return NextResponse.json({ success: true, status: "REFUND_RECORDED" });

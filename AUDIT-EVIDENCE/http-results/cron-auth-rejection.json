@@ -1,0 +1,42 @@
+{
+  "test_id": "TEST-CRON-001",
+  "endpoint": "/api/cron/expire-bookings",
+  "method": "POST / GET",
+  "timestamp": "2026-09-17T19:13:20Z",
+  "cases": [
+    {
+      "case": "Unauthenticated invocation",
+      "headers": {},
+      "response_status": 401,
+      "response_body": {
+        "success": false,
+        "error": "अनधिकृत: क्रॉन सीक्रेट अथवा सुपर एडमिन अनुमति अनिवार्य है (Unauthorized)"
+      },
+      "result": "PASS"
+    },
+    {
+      "case": "Invalid bearer token",
+      "headers": {
+        "Authorization": "Bearer forged_or_stale_token_123"
+      },
+      "response_status": 401,
+      "response_body": {
+        "success": false,
+        "error": "अनधिकृत: क्रॉन सीक्रेट अथवा सुपर एडमिन अनुमति अनिवार्य है (Unauthorized)"
+      },
+      "result": "PASS"
+    },
+    {
+      "case": "Valid x-cron-secret",
+      "headers": {
+        "x-cron-secret": "fitcheck_test_cron_secret_7728"
+      },
+      "response_status": 200,
+      "response_body": {
+        "success": true,
+        "expiredCount": 0
+      },
+      "result": "PASS"
+    }
+  ]
+}

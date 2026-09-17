@@ -57,7 +57,8 @@ export async function GET(
           nameEn: "Shri Jorawar Dham Pilgrimage Trust (Regd.)",
           address: "श्री जोरावर धाम, ज़िला चूरू (राजस्थान) 331001",
           pan: "AABTS9284F",
-          taxExemption80G: "CIT(E)/JAIPUR/80G/2022-23/A/10492",
+          taxExemption80G: null, // Note: Darshan/Pooja Seva fees are not 80G tax deductible (applicable only to pure donations)
+          receiptType: "SEVA_FEE",
         },
       },
     });

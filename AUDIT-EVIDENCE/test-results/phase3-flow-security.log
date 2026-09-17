@@ -1,0 +1,65 @@
+==================================================
+🛡️ RUNNING PHASE 3 SECURITY & PAYMENT TEST SUITE
+==================================================
+
+🔑 Test 1: Devotee Mobile OTP Authentication & Security
+[2026-09-17T19:13:49.976Z] [INFO]: OTP requested for identifier [98****99] from IP [127.0.0.1] 
+✅ PASS: OTP generated successfully
+✅ PASS: Dev/test OTP retrieved for test verification
+✅ PASS: OTP record stored in database
+✅ PASS: OTP is NEVER stored in plaintext; database contains secure salted hash
+✅ PASS: Token hash is a 64-character SHA-256 cryptographic digest
+✅ PASS: Invalid OTP correctly rejected
+[2026-09-17T19:13:49.984Z] [INFO]: Devotee authenticated successfully [9b5e949b-f934-4bbe-974d-15e15d09b005] 
+✅ PASS: Valid OTP verified successfully
+✅ PASS: Devotee user account created/retrieved
+✅ PASS: Secure session token generated
+✅ PASS: Single-use enforced: Reused OTP rejected
+
+🏛️ Test 2: Services, Slots & Booking Creation
+
+💰 Test 3: Safe Server-Side Money Calculation & Tampering Prevention
+[2026-09-17T19:13:50.003Z] [INFO]: Booking created [JD-202609-7CFA89] status: PENDING_PAYMENT for user: 9b5e949b-f934-4bbe-974d-15e15d09b005 
+✅ PASS: Booking hold created: [JD-202609-7CFA89]
+✅ PASS: Booking initial status is PENDING_PAYMENT
+✅ PASS: Amount calculated strictly server-side: ₹1002.00 (100200 paise) for 2 devotees
+
+💳 Test 4: Payment Gateway Order & HMAC Signature Verification
+✅ PASS: Gateway payment order created [order_mock_b9956eba7224a4fd]
+✅ PASS: Gateway order amount matches server-calculated paise exactly (100200 paise)
+✅ PASS: Tampered payment signature successfully rejected
+✅ PASS: Authentic HMAC payment signature verified
+✅ PASS: Booking status correctly transitioned to CONFIRMED
+✅ PASS: Payment status separated and marked PAID
+✅ PASS: Official receipt generated: REC-1789672430008
+
+📡 Test 5: Webhook Signature Verification & Idempotent Processing
+✅ PASS: Webhook with invalid HMAC signature rejected
+✅ PASS: Valid webhook signature verified
+✅ PASS: Duplicate webhook idempotency check: payment is already marked PAID, safely ignored without duplicate
+✅ PASS: Receipt count remains strictly 1 (no duplicate receipts created)
+
+🎟️ Test 6: QR Ticket Opaque Security & Double Check-in Prevention
+✅ PASS: QR Code generated as secure Data URI
+✅ PASS: Authentic ticket QR verified as valid for entrance
+✅ PASS: Ticket status is confirmed prior to check-in
+✅ PASS: Double check-in prevented: Replayed ticket scan is rejected as invalid
+✅ PASS: Replayed ticket correctly identified as ALREADY CHECKED IN
+
+⏳ Test 7: Expired Booking Hold Sweeper
+[2026-09-17T19:13:50.059Z] [INFO]: Expired 1 uncompleted pending booking holds 
+✅ PASS: Expired booking hold sweeper released 1 expired hold(s)
+✅ PASS: Stale pending booking transitioned to EXPIRED
+
+🔄 Test 8: Cancellation & Refund Architecture
+✅ PASS: Booking status transitioned to CANCELLED
+✅ PASS: Payment status transitioned to REFUND_PENDING
+✅ PASS: Refund audit record created with full transaction traceability
+
+🔒 Test 9: IDOR & Access Control Security
+✅ PASS: IDOR protection: Devotee B cannot access Devotee A's booking records
+✅ PASS: IDOR protection: Devotee B cannot access Devotee A's financial receipts
+
+==================================================
+FLOW & SECURITY TEST SUMMARY: 36 PASSED | 0 FAILED
+==================================================

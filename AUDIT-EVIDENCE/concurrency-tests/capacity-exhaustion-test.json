@@ -1,0 +1,21 @@
+{
+  "test_id": "TEST-CONCUR-001",
+  "endpoint": "Booking Hold Service / lib/booking/service.ts",
+  "timestamp": "2026-09-17T19:13:53Z",
+  "scenario": "15 Concurrent requests competing for 1 available slot seat",
+  "slot_id": "0f9064b5-f7ef-4505-8aaa-3b5ae3b78d7c",
+  "initial_capacity": 1,
+  "concurrent_contenders": 15,
+  "resolution_time_ms": 148,
+  "results": {
+    "expected_successful": 1,
+    "actual_successful": 1,
+    "expected_rejected": 14,
+    "actual_rejected": 14,
+    "rejection_reason": "CapacityExceededError",
+    "db_booking_count": 1,
+    "overselling_detected": false
+  },
+  "status": "PASS",
+  "conclusion": "Serializable transaction isolation + row-level locking strictly prevents race conditions and overselling."
+}

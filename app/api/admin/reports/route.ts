@@ -46,6 +46,16 @@ export async function GET(req: NextRequest) {
         },
       });
 
+function sanitizeCsvCell(value: any): string {
+  if (value === null || value === undefined) return '""';
+  let str = String(value);
+  // Neutralize CSV Formula Injection (CWE-1236)
+  if (/^[\=\+\-\@\t\r%]/.test(str)) {
+    str = `'${str}`;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
       if (exportType === "bookings") {
         const bookings = await prisma.booking.findMany({
           where: { createdAt: { gte: startDate } },
@@ -56,16 +66,16 @@ export async function GET(req: NextRequest) {
 
         const headers = ["Reference", "Date", "Slot", "Service", "DevoteeName", "DevoteePhoneMasked", "Count", "AmountINR", "Status", "CheckedInAt"];
         const rows = bookings.map((b) => [
-          b.bookingReference,
-          b.bookingDate.toISOString().split("T")[0],
-          `"${b.slot.startTime} - ${b.slot.endTime}"`,
-          `"${b.service.titleHi}"`,
-          `"${b.primaryDevoteeName.replace(/"/g, '""')}"`,
-          `${b.primaryDevoteePhone.slice(0, 2)}****${b.primaryDevoteePhone.slice(-4)}`,
+          sanitizeCsvCell(b.bookingReference),
+          sanitizeCsvCell(b.bookingDate.toISOString().split("T")[0]),
+          sanitizeCsvCell(`${b.slot.startTime} - ${b.slot.endTime}`),
+          sanitizeCsvCell(b.service.titleHi),
+          sanitizeCsvCell(b.primaryDevoteeName),
+          sanitizeCsvCell(`${b.primaryDevoteePhone.slice(0, 2)}****${b.primaryDevoteePhone.slice(-4)}`),
           b.numberOfDevotees,
           b.totalAmountInPaise / 100,
-          b.bookingStatus,
-          b.checkedInAt ? b.checkedInAt.toISOString() : "",
+          sanitizeCsvCell(b.bookingStatus),
+          sanitizeCsvCell(b.checkedInAt ? b.checkedInAt.toISOString() : ""),
         ]);
 
         const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
@@ -87,15 +97,15 @@ export async function GET(req: NextRequest) {
 
         const headers = ["Reference", "ReceiptNo", "Date", "Cause", "DonorName", "PhoneMasked", "AmountINR", "Status", "Gateway"];
         const rows = donations.map((d) => [
-          d.donationReference,
-          d.receiptNumber || "",
-          d.createdAt.toISOString().split("T")[0],
-          `"${d.cause?.titleHi || "General Seva"}"`,
-          `"${d.donorName.replace(/"/g, '""')}"`,
-          `${d.donorPhone.slice(0, 2)}****${d.donorPhone.slice(-4)}`,
+          sanitizeCsvCell(d.donationReference),
+          sanitizeCsvCell(d.receiptNumber || ""),
+          sanitizeCsvCell(d.createdAt.toISOString().split("T")[0]),
+          sanitizeCsvCell(d.cause?.titleHi || "General Seva"),
+          sanitizeCsvCell(d.donorName),
+          sanitizeCsvCell(`${d.donorPhone.slice(0, 2)}****${d.donorPhone.slice(-4)}`),
           d.amountInPaise / 100,
-          d.status,
-          d.gateway,
+          sanitizeCsvCell(d.status),
+          sanitizeCsvCell(d.gateway),
         ]);
 
         const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
@@ -117,14 +127,14 @@ export async function GET(req: NextRequest) {
 
         const headers = ["PaymentReference", "BookingReference", "Gateway", "GatewayOrderId", "GatewayPaymentId", "AmountINR", "Status", "Date"];
         const rows = payments.map((p) => [
-          p.paymentReference,
-          p.booking?.bookingReference || "",
-          p.gateway,
-          p.gatewayOrderId || "",
-          p.gatewayPaymentId || "",
+          sanitizeCsvCell(p.paymentReference),
+          sanitizeCsvCell(p.booking?.bookingReference || ""),
+          sanitizeCsvCell(p.gateway),
+          sanitizeCsvCell(p.gatewayOrderId || ""),
+          sanitizeCsvCell(p.gatewayPaymentId || ""),
           p.amountInPaise / 100,
-          p.status,
-          p.createdAt.toISOString(),
+          sanitizeCsvCell(p.status),
+          sanitizeCsvCell(p.createdAt.toISOString()),
         ]);
 
         const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");

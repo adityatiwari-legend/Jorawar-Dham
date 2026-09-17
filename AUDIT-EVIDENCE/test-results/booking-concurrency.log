@@ -1,0 +1,23 @@
+==================================================
+🔥 RUNNING CRITICAL BOOKING CONCURRENCY TESTS
+==================================================
+
+🧪 Test 1: 15 Concurrent Simultaneous Requests Competing for 1 Available Seat
+   Slot ID: 0f9064b5-f7ef-4505-8aaa-3b5ae3b78d7c | Capacity: 1 | Contenders: 15
+[2026-09-17T19:13:53.925Z] [INFO]: Booking created [JD-202609-787D21] status: PENDING_PAYMENT for user: 5f2681c8-3ecb-4c71-a53a-f026b6dab599 
+   ⚡ All 15 concurrent operations resolved in 148ms
+✅ PASS: Exactly 1 request succeeded (Expected: 1, Actual: 1)
+✅ PASS: Exactly 14 requests were rejected (Expected: 14, Actual: 14)
+✅ PASS: All 14 rejections were strictly due to CapacityExceededError (Count: 14)
+✅ PASS: Database strictly enforces capacity limit: exactly 1 booking in database (Count: 1)
+
+🧪 Test 2: Partial Multi-seat Capacity Exhaustion
+[2026-09-17T19:13:54.066Z] [INFO]: Booking created [JD-202609-96A64A] status: PENDING_PAYMENT for user: 5f2681c8-3ecb-4c71-a53a-f026b6dab599 
+✅ PASS: Devotee Group A successfully books 3 of 5 seats
+✅ PASS: Devotee Group B rejected because 3 seats requested exceeds remaining capacity of 2
+[2026-09-17T19:13:54.072Z] [INFO]: Booking created [JD-202609-D8FAE9] status: PENDING_PAYMENT for user: 5f2681c8-3ecb-4c71-a53a-f026b6dab599 
+✅ PASS: Devotee Group C successfully books exactly remaining 2 seats
+
+==================================================
+CONCURRENCY TEST SUMMARY: 7 PASSED | 0 FAILED
+==================================================

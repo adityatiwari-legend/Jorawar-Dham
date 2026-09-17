@@ -32,24 +32,35 @@ CONTAINER_NAME="jorawar_dham_postgres"
 DB_NAME="jorawar_dham_db"
 DB_USER="jorawar_admin"
 RETENTION_DAYS=30
+KEY_FILE="/etc/backup/encryption.key"
 
 mkdir -p "${BACKUP_DIR}"
 
-BACKUP_FILE="${BACKUP_DIR}/jorawar_dham_${DATE}.sql.gz"
+BACKUP_FILE="${BACKUP_DIR}/jorawar_dham_${DATE}.sql.gz.enc"
 
-echo "[$(date)] Starting PostgreSQL full backup..."
+echo "[$(date)] Starting PostgreSQL encrypted full backup..."
 
-# Execute pg_dump inside container and compress via gzip
-docker exec -t ${CONTAINER_NAME} pg_dump -U ${DB_USER} -d ${DB_NAME} -F p --clean --if-exists | gzip > "${BACKUP_FILE}"
+# Execute pg_dump, compress via gzip, and encrypt with AES-256-CBC (PBKDF2, 100k iterations)
+docker exec -t ${CONTAINER_NAME} pg_dump -U ${DB_USER} -d ${DB_NAME} -F p --clean --if-exists \
+  | gzip -9 \
+  | openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt -pass file:${KEY_FILE} -out "${BACKUP_FILE}"
 
-# Set secure permissions
+# Set secure permissions (read/write only by root/backup service)
 chmod 600 "${BACKUP_FILE}"
 
-echo "[$(date)] Backup completed successfully: ${BACKUP_FILE} ($(du -h "${BACKUP_FILE}" | cut -f1))"
+echo "[$(date)] Encrypted backup completed successfully: ${BACKUP_FILE} ($(du -h "${BACKUP_FILE}" | cut -f1))"
 
 # Prune backups older than retention policy
-find "${BACKUP_DIR}" -type f -name "jorawar_dham_*.sql.gz" -mtime +${RETENTION_DAYS} -delete
+find "${BACKUP_DIR}" -type f -name "jorawar_dham_*.sql.gz.enc" -mtime +${RETENTION_DAYS} -delete
 echo "[$(date)] Pruned backups older than ${RETENTION_DAYS} days."
+```
+
+### Key Management
+Generate and safeguard the AES-256 encryption key:
+```bash
+mkdir -p /etc/backup
+openssl rand -base64 32 > /etc/backup/encryption.key
+chmod 600 /etc/backup/encryption.key
 ```
 
 ### Scheduling via Crontab
@@ -75,10 +86,12 @@ docker compose exec postgres psql -U jorawar_admin -d postgres -c "DROP DATABASE
 docker compose exec postgres psql -U jorawar_admin -d postgres -c "CREATE DATABASE jorawar_dham_db OWNER jorawar_admin;"
 ```
 
-### Step 2: Restore from Compressed SQL Dump
+### Step 2: Decrypt & Restore from Encrypted Dump
 ```bash
-# Decompress and stream SQL dump into database
-gunzip -c /opt/backups/postgres/jorawar_dham_YYYYMMDD_HHMMSS.sql.gz | docker compose exec -T postgres psql -U jorawar_admin -d jorawar_dham_db
+# Decrypt stream using OpenSSL, decompress with gunzip, and pipe into PostgreSQL
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -pass file:/etc/backup/encryption.key -in /opt/backups/postgres/jorawar_dham_YYYYMMDD_HHMMSS.sql.gz.enc \
+  | gunzip -c \
+  | docker compose exec -T postgres psql -U jorawar_admin -d jorawar_dham_db
 ```
 
 ### Step 3: Run Post-Restore Verification Checks

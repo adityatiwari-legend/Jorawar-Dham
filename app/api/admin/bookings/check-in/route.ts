@@ -18,6 +18,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "प्रशासन लॉगिन आवश्यक है" }, { status: 401 });
     }
 
+    // Strict RBAC: Gate entry check-in requires SUPER_ADMIN, BOOKING_ADMIN, or STAFF
+    const hasCheckInPermission =
+      admin.isSuperAdmin ||
+      admin.roles.includes("SUPER_ADMIN") ||
+      admin.roles.includes("BOOKING_ADMIN") ||
+      admin.roles.includes("STAFF") ||
+      admin.permissions.includes("BOOKING_CHECKIN") ||
+      admin.permissions.includes("BOOKINGS_MANAGE");
+
+    if (!hasCheckInPermission) {
+      logger.warn(`Unauthorized check-in attempt by admin [${admin.email}] with roles [${admin.roles.join(", ")}]`);
+      return NextResponse.json(
+        { success: false, error: "अनधिकृत: चेक-इन सत्यापन की अनुमति नहीं है (Forbidden: Insufficient privileges)" },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const parsed = checkInSchema.safeParse(body);
     if (!parsed.success) {

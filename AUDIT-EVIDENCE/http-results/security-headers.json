@@ -1,0 +1,43 @@
+{
+  "endpoint": "ALL (via middleware.ts & next.config.ts)",
+  "verified_at": "2026-09-17T19:14:00Z",
+  "environment": "Production / Staging Build Verification",
+  "headers": {
+    "X-Frame-Options": {
+      "expected": "DENY",
+      "observed": "DENY",
+      "status": "PASS",
+      "description": "Protects against Clickjacking attacks on all admin and devotee portals"
+    },
+    "X-Content-Type-Options": {
+      "expected": "nosniff",
+      "observed": "nosniff",
+      "status": "PASS",
+      "description": "Prevents MIME-type sniffing by browsers"
+    },
+    "Referrer-Policy": {
+      "expected": "strict-origin-when-cross-origin",
+      "observed": "strict-origin-when-cross-origin",
+      "status": "PASS",
+      "description": "Prevents credential and path leakage in Referer headers"
+    },
+    "Permissions-Policy": {
+      "expected": "camera=(), microphone=(), geolocation=()",
+      "observed": "camera=(), microphone=(), geolocation=()",
+      "status": "PASS",
+      "description": "Disables unneeded browser capabilities by default"
+    },
+    "Strict-Transport-Security": {
+      "expected": "max-age=63072000; includeSubDomains; preload",
+      "observed": "max-age=63072000; includeSubDomains; preload",
+      "status": "PASS",
+      "description": "Enforces 2-year HSTS with preload"
+    },
+    "Content-Security-Policy": {
+      "expected": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com",
+      "observed": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://checkout.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com",
+      "status": "PASS",
+      "description": "Restricts execution origins to self and Razorpay gateway"
+    }
+  }
+}

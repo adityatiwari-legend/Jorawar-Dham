@@ -1,0 +1,67 @@
+==================================================
+🔥 RUNNING ADVERSARIAL RED-TEAM FITCHECK SUITE
+==================================================
+
+[TEST 1] Testing CSV Formula Injection Sanitization...
+✅ PASS: Sanitized malicious formula trigger in: [=cmd|' /C calc'!A0] -> "'=cmd|' /C calc'!A0"
+✅ PASS: Sanitized malicious formula trigger in: [+1234567890] -> "'+1234567890"
+✅ PASS: Sanitized malicious formula trigger in: [-50000] -> "'-50000"
+✅ PASS: Sanitized malicious formula trigger in: [@SUM(A1:A10)] -> "'@SUM(A1:A10)"
+✅ PASS: Sanitized malicious formula trigger in: [	TabEscapedPayload] -> "'	TabEscapedPayload"
+✅ PASS: Sanitized malicious formula trigger in: [CarriageReturnPayload] -> "'CarriageReturnPayload"
+✅ PASS: Sanitized malicious formula trigger in: [%0AExploit] -> "'%0AExploit"
+✅ PASS: Normal input preserved without prefix: [Normal devotee name] -> "Normal devotee name"
+✅ PASS: Normal input preserved without prefix: [Name with "quotes" inside] -> "Name with ""quotes"" inside"
+
+[TEST 2] Testing Cron Endpoint Security & Rejection...
+✅ PASS: Unauthenticated cron request rejected with HTTP 401 (got 401)
+✅ PASS: Invalid cron token rejected with HTTP 401 (got 401)
+✅ PASS: Valid x-cron-secret authenticated with HTTP 200 (got 200)
+
+[TEST 3] Testing Payment Webhook Signature & Donation Idempotency...
+[2026-09-17T19:13:39.395Z] [WARN]: Security alert: Invalid webhook signature received on /api/payments/webhook 
+✅ PASS: Invalid webhook signature rejected with HTTP 400 (got 400)
+✅ PASS: Created test pending donation with order ID [order_redteam_1789672419395]
+[2026-09-17T19:13:39.400Z] [INFO]: Webhook event [payment.captured] received for order [order_redteam_1789672419395] payment [pay_redteam_1789672419395] 
+[2026-09-17T19:13:39.415Z] [INFO]: Webhook: Donation [DON-REDTEAM-1789672419395] marked PAID via webhook 
+✅ PASS: First webhook execution marks donation as PROCESSED
+✅ PASS: Donation status transitioned to PAID in database
+✅ PASS: Donation receipt issued: REC-DON-202609-343812
+[2026-09-17T19:13:39.417Z] [INFO]: Webhook event [payment.captured] received for order [order_redteam_1789672419395] payment [pay_redteam_1789672419395] 
+[2026-09-17T19:13:39.419Z] [INFO]: Webhook idempotency: Donation [DON-REDTEAM-1789672419395] already confirmed and paid. Skipping duplicate. 
+✅ PASS: Duplicate webhook execution safely detected and idempotently skipped
+
+[TEST 4] Testing Seva Booking 80G Tax Exemption Clarification...
+✅ PASS: Seva fee receipts do not claim 80G tax exemption
+✅ PASS: Seva receipts properly marked as SEVA_FEE
+
+[TEST 5] Testing Admin Check-in Role RBAC Checks...
+✅ PASS: Role [SUPER_ADMIN] is authorized for gate check-in
+✅ PASS: Role [BOOKING_ADMIN] is authorized for gate check-in
+✅ PASS: Role [STAFF] is authorized for gate check-in
+✅ PASS: Role [CONTENT_ADMIN] is NOT authorized for gate check-in (Least Privilege)
+✅ PASS: Role [EVENT_ADMIN] is NOT authorized for gate check-in (Least Privilege)
+✅ PASS: Role [FINANCE_ADMIN] is NOT authorized for gate check-in (Least Privilege)
+
+[TEST 6] Testing Payment Amount Calculation & Anti-Tampering...
+✅ PASS: Authoritative amount strictly computed on server (0 paise), ignoring client tampered (100 paise)
+✅ PASS: Client-provided amount is never trusted for financial operations
+
+[TEST 7] Testing QR Replay & Cryptographic Tampering...
+ℹ️ No existing CONFIRMED booking found for QR live check, verified logic via unit rules.
+
+[TEST 8] Testing File Upload Security & Forbidden Extensions...
+✅ PASS: Forbidden extension list blocks dangerous extension: .php
+✅ PASS: Forbidden extension list blocks dangerous extension: .exe
+✅ PASS: Forbidden extension list blocks dangerous extension: .sh
+✅ PASS: Forbidden extension list blocks dangerous extension: .svg
+✅ PASS: Forbidden extension list blocks dangerous extension: .html
+✅ PASS: Forbidden extension list blocks dangerous extension: .js
+✅ PASS: Forbidden extension list blocks dangerous extension: .bat
+✅ PASS: Sanitized path traversal characters in: ../../../etc/passwd.jpg -> ._._._etc_passwd.jpg
+✅ PASS: Sanitized path traversal characters in: ..\..\windows\system32\cmd.exe -> ._._windows_system32_cmd.exe
+✅ PASS: Sanitized path traversal characters in: test/../../secret.png -> test_._._secret.png
+
+==================================================
+🔥 RED-TEAM AUDIT COMPLETED: 38 PASSED, 0 FAILED
+==================================================

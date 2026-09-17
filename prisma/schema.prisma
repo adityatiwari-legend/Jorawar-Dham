@@ -1,0 +1,720 @@
+// ==============================================================================
+// PRISMA SCHEMA - JORAWAR DHAM DIGITAL PLATFORM
+// Normalized PostgreSQL schema for Phase 1 technical foundation
+// ==============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------------------------------------------------------------------------
+// ENUMS
+// ------------------------------------------------------------------------------
+
+enum AdminRoleType {
+  SUPER_ADMIN
+  CONTENT_ADMIN
+  BOOKING_ADMIN
+  FINANCE_ADMIN
+  EVENT_ADMIN
+  STAFF
+}
+
+enum AdminStatus {
+  ACTIVE
+  SUSPENDED
+  DEACTIVATED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum NoticePriority {
+  LOW
+  NORMAL
+  URGENT
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  LOGOUT
+  PASSWORD_CHANGE
+  ROLE_CHANGE
+  SECURITY_ALERT
+}
+
+enum ActorType {
+  ADMIN
+  USER
+  SYSTEM
+}
+
+enum OtpPurpose {
+  DEVOTEE_LOGIN
+  PHONE_VERIFY
+  PASSWORD_RESET
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  PAYMENT_PROCESSING
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  REFUND_PENDING
+  REFUNDED
+  CHECKED_IN
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  FAILED
+  REFUND_PENDING
+  REFUNDED
+}
+
+enum RefundStatus {
+  REQUESTED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentGateway {
+  RAZORPAY
+  CASH_COUNTER
+  MOCK
+}
+
+// ------------------------------------------------------------------------------
+// AUTHENTICATION & RBAC
+// ------------------------------------------------------------------------------
+
+model Admin {
+  id                   String        @id @default(uuid())
+  username             String        @unique @db.VarChar(50)
+  email                String        @unique @db.VarChar(255)
+  passwordHash         String        @db.VarChar(255)
+  firstName            String        @db.VarChar(100)
+  lastName             String?       @db.VarChar(100)
+  status               AdminStatus   @default(ACTIVE)
+  failedLoginAttempts  Int           @default(0)
+  lockedUntil          DateTime?
+  lastLoginAt          DateTime?
+  lastLoginIp          String?       @db.VarChar(45)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  roles                AdminRole[]
+  sessions             AdminSession[]
+  auditLogs            AuditLog[]
+
+  @@index([email])
+  @@index([username])
+  @@index([status])
+  @@map("admins")
+}
+
+model Role {
+  id          String         @id @default(uuid())
+  name        AdminRoleType  @unique
+  description String?        @db.VarChar(255)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  admins      AdminRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  code        String           @unique @db.VarChar(100)
+  module      String           @db.VarChar(50)
+  description String?          @db.VarChar(255)
+  createdAt   DateTime       @default(now())
+
+  roles       RolePermission[]
+
+  @@index([module])
+  @@map("permissions")
+}
+
+model AdminRole {
+  id        String   @id @default(uuid())
+  adminId   String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([adminId, roleId])
+  @@index([adminId])
+  @@index([roleId])
+  @@map("admin_roles")
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime   @default(now())
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model AdminSession {
+  id               String   @id @default(uuid())
+  adminId          String
+  sessionTokenHash String   @unique @db.VarChar(64) // SHA-256 hash of random token
+  expiresAt        DateTime
+  ipAddress        String?  @db.VarChar(45)
+  userAgent        String?  @db.Text
+  createdAt        DateTime @default(now())
+  lastActiveAt     DateTime @default(now())
+
+  admin            Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([sessionTokenHash])
+  @@index([expiresAt])
+  @@map("admin_sessions")
+}
+
+// ------------------------------------------------------------------------------
+// DEVOTEE FOUNDATION (For Future Phases)
+// ------------------------------------------------------------------------------
+
+model User {
+  id              String        @id @default(uuid())
+  phone           String        @unique @db.VarChar(20)
+  email           String?       @unique @db.VarChar(255)
+  fullName        String?       @db.VarChar(150)
+  isPhoneVerified Boolean       @default(false)
+  isEmailVerified Boolean       @default(false)
+  status          UserStatus    @default(ACTIVE)
+  city            String?       @db.VarChar(100)
+  state           String?       @db.VarChar(100)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  sessions        UserSession[]
+  bookings        Booking[]
+  payments        Payment[]
+  donations       Donation[]
+
+  @@index([phone])
+  @@index([email])
+  @@index([status])
+  @@map("users")
+}
+
+model UserSession {
+  id               String   @id @default(uuid())
+  userId           String
+  sessionTokenHash String   @unique @db.VarChar(64) // SHA-256 hash
+  expiresAt        DateTime
+  ipAddress        String?  @db.VarChar(45)
+  userAgent        String?  @db.Text
+  createdAt        DateTime @default(now())
+  lastActiveAt     DateTime @default(now())
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sessionTokenHash])
+  @@index([expiresAt])
+  @@map("user_sessions")
+}
+
+model OtpRequest {
+  id          String      @id @default(uuid())
+  identifier  String      @db.VarChar(255) // Phone or email
+  hashedOtp   String      @db.VarChar(128) // Salted SHA-256 or HMAC
+  purpose     OtpPurpose
+  attempts    Int         @default(0)
+  isUsed      Boolean     @default(false)
+  expiresAt   DateTime
+  verifiedAt  DateTime?
+  ipAddress   String?     @db.VarChar(45)
+  createdAt   DateTime    @default(now())
+
+  @@index([identifier, purpose, isUsed])
+  @@index([expiresAt])
+  @@map("otp_requests")
+}
+
+// ------------------------------------------------------------------------------
+// DYNAMIC CMS & CONTENT ENTITIES (Bilingual)
+// ------------------------------------------------------------------------------
+
+model Page {
+  id          String        @id @default(uuid())
+  slug        String        @unique @db.VarChar(100)
+  isSystem    Boolean       @default(false)
+  status      String        @default("PUBLISHED") @db.VarChar(20)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  sections    PageSection[]
+
+  @@index([slug])
+  @@map("pages")
+}
+
+model PageSection {
+  id          String   @id @default(uuid())
+  pageId      String
+  sectionKey  String   @db.VarChar(100)
+  titleHi     String?  @db.VarChar(255)
+  titleEn     String?  @db.VarChar(255)
+  subtitleHi  String?  @db.VarChar(255)
+  subtitleEn  String?  @db.VarChar(255)
+  contentHi   String?  @db.Text
+  contentEn   String?  @db.Text
+  mediaUrl    String?  @db.VarChar(500)
+  sortOrder   Int      @default(0)
+  metadata    Json?    // Optional structured data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, sectionKey])
+  @@index([pageId])
+  @@index([sectionKey])
+  @@map("page_sections")
+}
+
+model Service {
+  id            String   @id @default(uuid())
+  slug          String   @unique @db.VarChar(100)
+  titleHi       String   @db.VarChar(255)
+  titleEn       String   @db.VarChar(255)
+  descriptionHi String   @db.Text
+  descriptionEn String   @db.Text
+  timingHi      String?  @db.VarChar(255)
+  timingEn      String?  @db.VarChar(255)
+  guidelinesHi  String?  @db.Text
+  guidelinesEn  String?  @db.Text
+  capacity      Int?     @default(0)
+  imageUrl      String?  @db.VarChar(500)
+  price         Int?     @default(0)
+  bookingStatus String   @default("AVAILABLE") @db.VarChar(50)
+  availabilityHi String? @db.VarChar(100)
+  availabilityEn String? @db.VarChar(100)
+  isActive      Boolean       @default(true)
+  sortOrder     Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  slots         ServiceSlot[]
+  bookings      Booking[]
+  blockedDates  BlockedDate[]
+
+  @@index([slug])
+  @@index([isActive, sortOrder])
+  @@map("services")
+}
+
+model Event {
+  id            String      @id @default(uuid())
+  slug          String      @unique @db.VarChar(120)
+  titleHi       String      @db.VarChar(255)
+  titleEn       String      @db.VarChar(255)
+  descriptionHi String      @db.Text
+  descriptionEn String      @db.Text
+  startDate     DateTime
+  endDate       DateTime
+  locationHi    String?     @db.VarChar(255)
+  locationEn    String?     @db.VarChar(255)
+  bannerImage   String?     @db.VarChar(500)
+  isFeatured    Boolean     @default(false)
+  status        EventStatus @default(UPCOMING)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([slug])
+  @@index([status, startDate])
+  @@index([isFeatured])
+  @@map("events")
+}
+
+model GalleryCategory {
+  id        String        @id @default(uuid())
+  slug      String        @unique @db.VarChar(80)
+  nameHi    String        @db.VarChar(120)
+  nameEn    String        @db.VarChar(120)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  items     GalleryItem[]
+
+  @@index([slug])
+  @@map("gallery_categories")
+}
+
+model GalleryItem {
+  id          String          @id @default(uuid())
+  categoryId  String
+  titleHi     String?         @db.VarChar(255)
+  titleEn     String?         @db.VarChar(255)
+  fileUrl     String          @db.VarChar(500)
+  fileKey     String          @db.VarChar(255) // Internal storage key
+  mimeType    String          @db.VarChar(100)
+  sizeBytes   Int
+  width       Int?
+  height      Int?
+  sortOrder   Int             @default(0)
+  isFeatured  Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  category    GalleryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([isFeatured])
+  @@map("gallery_items")
+}
+
+model Notice {
+  id          String         @id @default(uuid())
+  titleHi     String         @db.VarChar(255)
+  titleEn     String         @db.VarChar(255)
+  bodyHi      String         @db.Text
+  bodyEn      String         @db.Text
+  priority    NoticePriority @default(NORMAL)
+  isPinned    Boolean        @default(false)
+  isActive    Boolean        @default(true)
+  publishedAt DateTime       @default(now())
+  expiresAt   DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([isActive, isPinned, priority])
+  @@index([publishedAt])
+  @@map("notices")
+}
+
+model Faq {
+  id         String   @id @default(uuid())
+  category   String   @db.VarChar(80)
+  questionHi String   @db.VarChar(300)
+  questionEn String   @db.VarChar(300)
+  answerHi   String   @db.Text
+  answerEn   String   @db.Text
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category, isActive, sortOrder])
+  @@map("faqs")
+}
+
+model SiteSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique @db.VarChar(100)
+  value       String   @db.Text
+  description String?  @db.VarChar(255)
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+  @@map("site_settings")
+}
+
+model SeoMetadata {
+  id           String   @id @default(uuid())
+  path         String   @unique @db.VarChar(255) // e.g. "/about", "/darshan"
+  titleHi      String   @db.VarChar(255)
+  titleEn      String   @db.VarChar(255)
+  metaDescHi   String   @db.VarChar(500)
+  metaDescEn   String   @db.VarChar(500)
+  ogImage      String?  @db.VarChar(500)
+  canonicalUrl String?  @db.VarChar(500)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([path])
+  @@map("seo_metadata")
+}
+
+// ------------------------------------------------------------------------------
+// AUDIT LOGGING
+// ------------------------------------------------------------------------------
+
+model AuditLog {
+  id          String      @id @default(uuid())
+  actorType   ActorType   @default(ADMIN)
+  actorId     String?     @db.VarChar(100)
+  actorEmail  String?     @db.VarChar(255)
+  action      AuditAction
+  entity      String      @db.VarChar(100)
+  entityId    String?     @db.VarChar(100)
+  details     Json?       // Safe metadata - NO passwords, secrets, or raw OTPs
+  ipAddress   String?     @db.VarChar(45)
+  userAgent   String?     @db.Text
+  createdAt   DateTime    @default(now())
+
+  admin       Admin?      @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ------------------------------------------------------------------------------
+// DEVOTEE BOOKINGS, SLOTS, PAYMENTS, REFUNDS & RECEIPTS (Phase 3)
+// ------------------------------------------------------------------------------
+
+model ServiceSlot {
+  id            String    @id @default(uuid())
+  serviceId     String
+  date          DateTime? @db.Date // Specific date or null for recurring daily slot template
+  startTime     String    @db.VarChar(20) // e.g. "06:00 AM"
+  endTime       String    @db.VarChar(20) // e.g. "07:30 AM"
+  capacity      Int       @default(50)
+  bookedCount   Int       @default(0) // Fast cache, transactionally reconciled
+  priceInPaise  Int       @default(0) // Integer smallest currency unit (e.g. 50000 = ₹500.00)
+  isActive      Boolean   @default(true)
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  service       Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  bookings      Booking[]
+
+  @@index([serviceId, date, isActive])
+  @@index([serviceId, isActive, sortOrder])
+  @@map("service_slots")
+}
+
+model BlockedDate {
+  id          String   @id @default(uuid())
+  serviceId   String?  // null applies to all services
+  date        DateTime @db.Date
+  reasonHi    String   @db.VarChar(255)
+  reasonEn    String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  service     Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, date])
+  @@index([date])
+  @@map("blocked_dates")
+}
+
+model Booking {
+  id                  String        @id @default(uuid())
+  bookingReference    String        @unique @db.VarChar(50) // e.g. JD-202609-AB12CD
+  userId              String
+  serviceId           String
+  slotId              String
+  bookingDate         DateTime      @db.Date
+  numberOfDevotees    Int           @default(1)
+  primaryDevoteeName  String        @db.VarChar(150)
+  primaryDevoteePhone String        @db.VarChar(20)
+  devoteeDetails      Json?         // Companion names/ages
+  totalAmountInPaise  Int           @default(0) // Integer smallest currency unit
+  bookingStatus       BookingStatus @default(PENDING_PAYMENT)
+  qrSecurityToken     String        @unique @db.VarChar(100) // Opaque cryptographic token
+  expiresAt           DateTime      // 10-minute hold window for pending payment
+  checkedInAt         DateTime?
+  checkedInByAdminId  String?       @db.VarChar(100)
+  cancellationReason  String?       @db.Text
+  cancelledAt         DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service             Service       @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  slot                ServiceSlot   @relation(fields: [slotId], references: [id], onDelete: Restrict)
+  payments            Payment[]
+  refunds             Refund[]
+  receipt             Receipt?
+
+  @@index([userId])
+  @@index([serviceId, bookingDate])
+  @@index([slotId, bookingDate])
+  @@index([bookingStatus, expiresAt])
+  @@index([qrSecurityToken])
+  @@map("bookings")
+}
+
+model Payment {
+  id                  String         @id @default(uuid())
+  paymentReference    String         @unique @db.VarChar(50) // e.g. PAY-202609-AB12CD
+  bookingId           String
+  userId              String
+  gateway             PaymentGateway @default(RAZORPAY)
+  gatewayOrderId      String?        @unique @db.VarChar(100)
+  gatewayPaymentId    String?        @unique @db.VarChar(100)
+  gatewaySignature    String?        @db.VarChar(255)
+  amountInPaise       Int
+  currency            String         @default("INR") @db.VarChar(10)
+  status              PaymentStatus  @default(PENDING)
+  idempotencyKey      String?        @unique @db.VarChar(100)
+  paidAt              DateTime?
+  rawGatewayResponse  Json?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  booking             Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refunds             Refund[]
+  receipts            Receipt[]
+
+  @@index([bookingId])
+  @@index([userId])
+  @@index([status])
+  @@index([gatewayOrderId])
+  @@index([gatewayPaymentId])
+  @@map("payments")
+}
+
+model Refund {
+  id                  String       @id @default(uuid())
+  refundReference     String       @unique @db.VarChar(50) // e.g. REF-202609-AB12CD
+  paymentId           String
+  bookingId           String
+  gatewayRefundId     String?      @unique @db.VarChar(100)
+  amountInPaise       Int
+  reason              String       @db.Text
+  status              RefundStatus @default(REQUESTED)
+  processedByAdminId  String?      @db.VarChar(100)
+  processedAt         DateTime?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  payment             Payment      @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  booking             Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@index([bookingId])
+  @@index([status])
+  @@map("refunds")
+}
+
+model Receipt {
+  id                  String   @id @default(uuid())
+  receiptNumber       String   @unique @db.VarChar(50) // e.g. REC-202609-AB12CD
+  bookingId           String   @unique
+  paymentId           String
+  amountInPaise       Int
+  devoteeName         String   @db.VarChar(150)
+  maskedPhone         String   @db.VarChar(20)
+  serviceTitleHi      String   @db.VarChar(255)
+  serviceTitleEn      String   @db.VarChar(255)
+  issuedAt            DateTime @default(now())
+  createdAt           DateTime @default(now())
+
+  booking             Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  payment             Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([paymentId])
+  @@map("receipts")
+}
+
+// ------------------------------------------------------------------------------
+// DONATION SYSTEM (Phase 4)
+// ------------------------------------------------------------------------------
+
+model DonationCause {
+  id                     String     @id @default(uuid())
+  slug                   String     @unique @db.VarChar(100)
+  titleHi                String     @db.VarChar(255)
+  titleEn                String     @db.VarChar(255)
+  descriptionHi          String     @db.Text
+  descriptionEn          String     @db.Text
+  suggestedAmounts       Int[]      // in paise, e.g. [25100, 50100, 110000, 210000, 510000]
+  targetAmountInPaise    Int?
+  collectedAmountInPaise Int        @default(0)
+  imageUrl               String?    @db.VarChar(500)
+  isActive               Boolean    @default(true)
+  sortOrder              Int        @default(0)
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+
+  donations              Donation[]
+
+  @@index([isActive, sortOrder])
+  @@map("donation_causes")
+}
+
+model Donation {
+  id                 String         @id @default(uuid())
+  donationReference  String         @unique @db.VarChar(50) // e.g. DON-202609-AB12CD
+  userId             String?
+  causeId            String?
+  donorName          String         @db.VarChar(150)
+  donorPhone         String         @db.VarChar(20)
+  donorEmail         String?        @db.VarChar(255)
+  donorPan           String?        @db.VarChar(10) // Strictly validated for Indian donors
+  donorAddress       String?        @db.Text
+  donorCity          String?        @db.VarChar(100)
+  donorState         String?        @db.VarChar(100)
+  amountInPaise      Int            // Integer smallest currency unit
+  currency           String         @default("INR") @db.VarChar(10)
+  status             PaymentStatus  @default(PENDING) // PENDING, PAID, FAILED, REFUND_PENDING, REFUNDED
+  gateway            PaymentGateway @default(RAZORPAY)
+  gatewayOrderId     String?        @unique @db.VarChar(100)
+  gatewayPaymentId   String?        @unique @db.VarChar(100)
+  gatewaySignature   String?        @db.VarChar(255)
+  idempotencyKey     String?        @unique @db.VarChar(100)
+  isAnonymous        Boolean        @default(false)
+  receiptNumber      String?        @unique @db.VarChar(50) // e.g. REC-DON-202609-AB12CD
+  receiptIssuedAt    DateTime?
+  notes              String?        @db.Text
+  paidAt             DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  user               User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  cause              DonationCause? @relation(fields: [causeId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([causeId])
+  @@index([status])
+  @@index([gatewayOrderId])
+  @@index([gatewayPaymentId])
+  @@index([createdAt])
+  @@map("donations")
+}
+

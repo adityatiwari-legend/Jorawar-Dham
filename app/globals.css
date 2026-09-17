@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Rozha+One&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-devanagari: "Noto Sans Devanagari", sans-serif;
+  --font-display: "Rozha One", serif;
+  --font-body: "Outfit", sans-serif;
+
+  --color-sandstone-light: #fdfbf7;
+  --color-sandstone-border: #e8d3b0;
+  --color-saffron-primary: #ea580c;
+  --color-maroon-primary: #881337;
+  --color-gold-accent: #f59e0b;
+}
+
+body {
+  background-color: #fdfbf7;
+  color: #1c1917;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Devanagari typography enhancements */
+[lang="hi"] {
+  font-family: var(--font-devanagari);
+  line-height: 1.75;
+}
+
+[lang="hi"] h1,
+[lang="hi"] h2,
+[lang="hi"] h3 {
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+}
+
+/* Rajasthani arch & sacred patterns */
+.sandstone-gradient {
+  background: linear-gradient(135deg, #fdfbf7 0%, #f9f4ea 50%, #f2e7d1 100%);
+}
+
+.saffron-gradient {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+}
+
+.maroon-gradient {
+  background: linear-gradient(135deg, #881337 0%, #4c0519 100%);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.sacred-hero-mesh {
+  background-color: #4c0519;
+  background-image: 
+    radial-gradient(at 10% 20%, rgba(234, 88, 12, 0.45) 0px, transparent 50%),
+    radial-gradient(at 90% 80%, rgba(245, 158, 11, 0.35) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(136, 19, 55, 0.9) 0px, transparent 100%);
+}
+
+.temple-border {
+  border: 1px solid #e8d3b0;
+  box-shadow: 0 4px 20px -2px rgba(181, 125, 68, 0.1);
+}
+
+/* Visible focus outline for accessibility */
+*:focus-visible {
+  outline: 2px solid #ea580c;
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

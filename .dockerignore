@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.agents
+.gemini
+.env
+.env*.local
+storage/uploads/*
+!storage/uploads/.gitkeep
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+docs/
+*.tsbuildinfo

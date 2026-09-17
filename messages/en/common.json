@@ -1,0 +1,95 @@
+{
+  "site": {
+    "name": "Shri Jorawar Dham",
+    "subtitle": "Sacred Pilgrimage & Spiritual Sanctuary of Rajasthan",
+    "mottoHero": "Faith • Strength • Peace",
+    "description": "Shri Jorawar Dham, a sacred pilgrimage nestled in the revered land of Rajasthan, where thousands of devotees gather for darshan, seva, and divine blessings.",
+    "motto": "Truth, Seva, and Devotion"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Dham",
+    "history": "Sacred History",
+    "bhagwanJorawar": "Bhagwan Jorawar",
+    "dham": "Dham Guide",
+    "darshan": "Darshan",
+    "aarti": "Maha Aarti",
+    "seva": "Pooja & Seva",
+    "events": "Festivals & Events",
+    "gallery": "Sacred Gallery",
+    "donation": "Donation",
+    "visitorInfo": "Visitor Info",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "admin": "Admin",
+    "language": "Language"
+  },
+  "hero": {
+    "badge": "Revered Pilgrimage Shrine of Rajasthan",
+    "motto": "Faith • Strength • Peace",
+    "title": "Divine Darshan of Shri Jorawar Dham",
+    "subtitle": "The holy sanctuary of Param Pujya Jorawar Ji Maharaj, where devotion unites hearts. Find daily darshan schedules, aarti timings, and official announcements.",
+    "ctaDarshan": "Today's Darshan Timings",
+    "ctaHistory": "Explore Sacred History",
+    "emergencyNotice": "Important Notice: Entry into the temple sanctum is completely free. Please do not offer payments or tips to unauthorized persons."
+  },
+  "timings": {
+    "title": "Daily Darshan & Maha Aarti Timings",
+    "subtitle": "The temple doors welcome devotees throughout the holy day",
+    "mangalaAarti": "Mangala Aarti",
+    "shringarAarti": "Shringar Aarti",
+    "bhogAarti": "Rajbhog Aarti",
+    "sandhyaAarti": "Sandhya Maha Aarti",
+    "shayanAarti": "Shayan Aarti",
+    "openStatus": "Temple is Currently Open for Devotees",
+    "closedStatus": "Resting Hours - Doors Temporarily Closed",
+    "guidelinesNotice": "Devotees are requested to assemble in line 15 minutes before Aarti"
+  },
+  "notices": {
+    "liveTitle": "Live Announcements & Official Notices",
+    "viewAll": "View All Notices",
+    "urgent": "Urgent Advisory",
+    "pinned": "Pinned Notice",
+    "publishedOn": "Published",
+    "noNotices": "No new announcements at this time."
+  },
+  "events": {
+    "title": "Upcoming Festivals & Religious Melas",
+    "subtitle": "Celebrations and devotional gatherings observed throughout the year",
+    "viewDetails": "View Details",
+    "viewAll": "View All Festivals",
+    "dates": "Date",
+    "location": "Venue"
+  },
+  "gallery": {
+    "title": "Sacred Photo Gallery",
+    "subtitle": "Visual journey through Shri Jorawar Dham, deities, sanctum, and divine festivals",
+    "all": "All Photos",
+    "sanctum": "Sanctum & Deities",
+    "festivals": "Festivals",
+    "premises": "Dham Premises",
+    "seva": "Seva & Bhandara"
+  },
+  "footer": {
+    "trustName": "Shri Jorawar Dham Pilgrimage Trust (Regd.)",
+    "address": "Shri Jorawar Dham, Churu District, Rajasthan, India",
+    "quickLinks": "Quick Navigation",
+    "importantLinks": "Important Links",
+    "darshanTimings": "Darshan Timings",
+    "emergencyContact": "Emergency Helpline",
+    "copyright": "All rights reserved. Shri Jorawar Dham Trust.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "common": {
+    "readMore": "Read More",
+    "learnMore": "Learn More",
+    "back": "Go Back",
+    "close": "Close",
+    "loading": "Loading...",
+    "today": "Today",
+    "status": "Status",
+    "search": "Search",
+    "languageSwitched": "Language changed to English"
+  }
+}

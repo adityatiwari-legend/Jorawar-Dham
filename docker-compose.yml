@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  # 1. PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: jorawar_dham_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-jorawar_dham_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-jorawar_dham_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Next.js Web Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jorawar_dham_app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-jorawar_dham_db}?schema=public
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET}
+      DEVOTEE_SESSION_SECRET: ${DEVOTEE_SESSION_SECRET}
+      TICKET_QR_HMAC_SECRET: ${TICKET_QR_HMAC_SECRET}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://jorawardham.org}
+    volumes:
+      - media_storage:/app/storage/uploads
+    networks:
+      - internal_network
+    expose:
+      - "3000"
+
+  # 3. Nginx Reverse Proxy & TLS Termination
+  nginx:
+    image: nginx:alpine
+    container_name: jorawar_dham_nginx
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - media_storage:/var/www/uploads:ro
+    networks:
+      - internal_network
+
+volumes:
+  postgres_data:
+    driver: local
+  media_storage:
+    driver: local
+
+networks:
+  internal_network:
+    driver: bridge

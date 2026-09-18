@@ -66,8 +66,8 @@ export default async function DhamPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {locale === "hi"
-                ? "निकटतम प्रमुख रेलवे स्टेशन चूरू (Churu Junction) एवं सादुलपुर हैं। स्टेशन से धाम के लिए नियमित ऑटो, टैक्सी एवं बस सेवा उपलब्ध है।"
-                : "The nearest major railway hubs are Churu Junction and Sadulpur, connected directly to Delhi, Jaipur, and Bikaner. Local taxis are readily available."}
+                ? "निकटतम प्रमुख रेलवे स्टेशन धौलपुर (25 कि.मी.) एवं भरतपुर (75 कि.मी.) हैं। साथ ही आगरा (60 कि.मी.) व ग्वालियर (90 कि.मी.) से नियमित रेल संपर्क उपलब्ध है।"
+                : "Nearest primary railway stations are Dholpur (25 km) and Bharatpur (75 km), along with Agra (60 km) and Gwalior (90 km)."}
             </p>
           </div>
 
@@ -78,8 +78,8 @@ export default async function DhamPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {locale === "hi"
-                ? "जयपुर, दिल्ली एवं बीकानेर से राष्ट्रीय राजमार्ग द्वारा सुगम सड़क मार्ग। धाम प्रांगण में श्रद्धालुओं के वाहनों हेतु विशाल निःशुल्क पार्किंग व्यवस्था है।"
-                : "Well connected by national highways from Jaipur (200 km), Delhi (250 km), and Bikaner. Extensive free parking is provided inside the premises."}
+                ? "धौलपुर (25 कि.मी.), खरोगढ़ (17 कि.मी.), आगरा (60 कि.मी.), ग्वालियर (90 कि.मी.), भरतपुर (75 कि.मी.) एवं करौली (105 कि.मी.) से पक्की सड़कों द्वारा सुगम संपर्क।"
+                : "Smooth road connectivity from Dholpur (25 km), Kheragarh UP (17 km), Agra (60 km), Gwalior (90 km), Bharatpur (75 km), and Karauli (105 km)."}
             </p>
           </div>
 
@@ -90,8 +90,8 @@ export default async function DhamPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {locale === "hi"
-                ? "निकटतम अंतरराष्ट्रीय हवाई अड्डा जयपुर (Jaipur International Airport - 210 किमी) स्थित है।"
-                : "The nearest commercial airport is Jaipur International Airport (approx. 210 km), from where direct rental cars and express buses operate."}
+                ? "निकटतम हवाई अड्डे आगरा एयरपोर्ट (लगभग 60 कि.मी.) एवं ग्वालियर एयरपोर्ट (लगभग 90 कि.मी.) स्थित हैं।"
+                : "The nearest airports are Agra Airport (approx. 60 km) and Gwalior Airport (approx. 90 km), offering convenient taxi access."}
             </p>
           </div>
         </div>

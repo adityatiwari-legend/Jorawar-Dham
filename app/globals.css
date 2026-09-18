@@ -1,79 +1,135 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Rozha+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-devanagari: "Noto Sans Devanagari", sans-serif;
-  --font-display: "Rozha One", serif;
-  --font-body: "Outfit", sans-serif;
+  /* Official Design Tokens */
+  --maroon-deep: #5A001F;
+  --maroon-primary: #78002D;
+  --maroon-wine: #8B123E;
+  --gold-royal: #D4A72C;
+  --gold-soft: #E8C866;
+  --cream-warm: #FBF7EF;
+  --cream-ivory: #FFFDF8;
+  --charcoal: #211C1D;
+  --text-muted: #70686A;
 
-  --color-sandstone-light: #fdfbf7;
-  --color-sandstone-border: #e8d3b0;
-  --color-saffron-primary: #ea580c;
-  --color-maroon-primary: #881337;
-  --color-gold-accent: #f59e0b;
+  /* Typography */
+  --font-devanagari-serif: "Noto Serif Devanagari", Georgia, serif;
+  --font-devanagari-sans: "Noto Sans Devanagari", system-ui, sans-serif;
+  --font-latin: "Inter", system-ui, sans-serif;
+  --font-heading: "Noto Serif Devanagari", Georgia, serif;
 }
 
 body {
-  background-color: #fdfbf7;
-  color: #1c1917;
-  font-family: var(--font-body);
+  background-color: var(--cream-warm);
+  color: var(--charcoal);
+  font-family: var(--font-devanagari-sans), var(--font-latin);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Devanagari typography enhancements */
 [lang="hi"] {
-  font-family: var(--font-devanagari);
+  font-family: var(--font-devanagari-sans);
   line-height: 1.75;
 }
 
 [lang="hi"] h1,
 [lang="hi"] h2,
-[lang="hi"] h3 {
+[lang="hi"] h3,
+[lang="hi"] .font-serif {
+  font-family: var(--font-devanagari-serif);
   letter-spacing: 0.01em;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
-/* Rajasthani arch & sacred patterns */
-.sandstone-gradient {
-  background: linear-gradient(135deg, #fdfbf7 0%, #f9f4ea 50%, #f2e7d1 100%);
+/* Luxury Sacred Visual Utilities */
+.bg-cream-warm {
+  background-color: #FBF7EF;
 }
 
-.saffron-gradient {
-  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+.bg-cream-ivory {
+  background-color: #FFFDF8;
 }
 
-.maroon-gradient {
-  background: linear-gradient(135deg, #881337 0%, #4c0519 100%);
+.bg-maroon-deep {
+  background-color: #5A001F;
 }
 
-.gold-gradient {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+.bg-maroon-primary {
+  background-color: #78002D;
 }
 
-.sacred-hero-mesh {
-  background-color: #4c0519;
-  background-image: 
-    radial-gradient(at 10% 20%, rgba(234, 88, 12, 0.45) 0px, transparent 50%),
-    radial-gradient(at 90% 80%, rgba(245, 158, 11, 0.35) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(136, 19, 55, 0.9) 0px, transparent 100%);
+.bg-maroon-wine {
+  background-color: #8B123E;
 }
 
-.temple-border {
-  border: 1px solid #e8d3b0;
-  box-shadow: 0 4px 20px -2px rgba(181, 125, 68, 0.1);
+.text-maroon-deep {
+  color: #5A001F;
 }
 
-/* Visible focus outline for accessibility */
+.text-maroon-primary {
+  color: #78002D;
+}
+
+.text-gold-royal {
+  color: #D4A72C;
+}
+
+.text-gold-soft {
+  color: #E8C866;
+}
+
+.border-gold-royal {
+  border-color: #D4A72C;
+}
+
+.border-gold-hairline {
+  border-color: rgba(212, 167, 44, 0.35);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px -4px rgba(212, 167, 44, 0.4);
+}
+
+.temple-parchment {
+  background-color: #FFFDF8;
+  border: 1px solid rgba(212, 167, 44, 0.25);
+  box-shadow: 0 4px 20px -4px rgba(90, 0, 31, 0.06);
+}
+
+.cinematic-temple-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(90, 0, 31, 0.82) 0%,
+    rgba(90, 0, 31, 0.72) 45%,
+    rgba(90, 0, 31, 0.94) 100%
+  );
+}
+
+.sacred-gradient-card {
+  background: linear-gradient(145deg, #5A001F 0%, #78002D 50%, #8B123E 100%);
+}
+
+.subtle-lift {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.subtle-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(90, 0, 31, 0.12);
+}
+
+/* Accessibility Focus Ring */
 *:focus-visible {
-  outline: 2px solid #ea580c;
+  outline: 2px solid #D4A72C;
   outline-offset: 2px;
 }
 
-/* Reduced motion preference */
+/* Reduced Motion Preference */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

@@ -3,9 +3,28 @@
 import { useState, Suspense, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Clock, MapPin, Sparkles, ChevronDown, Flame, HeartHandshake, BookOpen, Compass, Info, HelpCircle } from "lucide-react";
+import {
+  Menu,
+  X,
+  Clock,
+  MapPin,
+  Sparkles,
+  ChevronDown,
+  BookOpen,
+  Compass,
+  Info,
+  HelpCircle,
+  ShieldCheck,
+  User,
+  Phone,
+  Calendar,
+  Flame,
+  Camera,
+  HeartHandshake,
+} from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Locale, getDictionary } from "@/lib/utils/i18n";
+import { siteConfig } from "@/lib/content/site";
 
 interface NavbarProps {
   locale: Locale;
@@ -16,28 +35,26 @@ export default function Navbar({ locale }: NavbarProps) {
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const dict = getDictionary(locale);
   const isHi = locale === "hi";
 
-  // Primary desktop navigation links
+  // Primary navigation links matching the official source requirements
   const primaryNavLinks = [
-    { href: `/${locale}`, label: dict.nav.home },
-    { href: `/${locale}/bhagwan-jorawar`, label: isHi ? "भगवान जोरावर" : "Bhagwan Jorawar" },
-    { href: `/${locale}/darshan`, label: dict.nav.darshan },
-    { href: `/${locale}/aarti`, label: isHi ? "आरती" : "Aarti" },
-    { href: `/${locale}/seva`, label: dict.nav.seva },
-    { href: `/${locale}/events`, label: dict.nav.events },
-    { href: `/${locale}/gallery`, label: dict.nav.gallery },
-    { href: `/${locale}/donation`, label: isHi ? "दान" : "Donation" },
-    { href: `/${locale}/visitor-info`, label: isHi ? "यात्री सूचना" : "Visitor Info" },
+    { href: `/${locale}`, label: isHi ? "होम" : "Home" },
+    { href: `/${locale}/about`, label: isHi ? "हमारे बारे में" : "About" },
+    { href: `/${locale}/history`, label: isHi ? "इतिहास" : "History" },
+    { href: `/${locale}/attraction-point`, label: isHi ? "मुख्य आकर्षण" : "Attractions" },
+    { href: `/${locale}/donation`, label: isHi ? "सहयोग / दान" : "Donation" },
+    { href: `/${locale}/how-to-reach`, label: isHi ? "कैसे पहुंचे" : "How to Reach" },
+    { href: `/${locale}/contact`, label: isHi ? "संपर्क" : "Contact" },
   ];
 
-  // Secondary links in "More" dropdown
+  // Secondary links in "More" dropdown for darshan, aarti, seva, events, gallery, FAQ
   const secondaryNavLinks = [
-    { href: `/${locale}/history`, label: dict.nav.history, icon: BookOpen },
-    { href: `/${locale}/dham`, label: dict.nav.dham, icon: Compass },
-    { href: `/${locale}/about`, label: dict.nav.about, icon: Info },
-    { href: `/${locale}/contact`, label: dict.nav.contact, icon: MapPin },
+    { href: `/${locale}/darshan`, label: isHi ? "दर्शन" : "Darshan", icon: Calendar },
+    { href: `/${locale}/aarti`, label: isHi ? "महाआरती" : "Maha Aarti", icon: Flame },
+    { href: `/${locale}/seva`, label: isHi ? "पूजा व सेवा" : "Pooja & Seva", icon: Sparkles },
+    { href: `/${locale}/events`, label: isHi ? "उत्सव व मेले" : "Events & Melas", icon: Sparkles },
+    { href: `/${locale}/gallery`, label: isHi ? "चित्र दीर्घा" : "Gallery", icon: Camera },
     { href: `/${locale}/faq`, label: isHi ? "प्रश्नोत्तरी (FAQ)" : "FAQ", icon: HelpCircle },
   ];
 
@@ -59,88 +76,107 @@ export default function Navbar({ locale }: NavbarProps) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-sandstone-50/95 backdrop-blur-md border-b border-sandstone-200 shadow-sm">
-      {/* Top Devotional Ticker Strip */}
-      <div className="bg-maroon-950 text-sandstone-200 text-xs py-1.5 px-4">
+    <header className="sticky top-0 z-40 bg-cream-warm/95 backdrop-blur-md border-b border-sandstone-200/80 shadow-sacred-sm">
+      {/* 1. Top Utility Devotional Bar with Official Mantra & Dholpur Address */}
+      <div className="bg-maroon-deep text-cream-ivory text-[11px] sm:text-xs py-1.5 px-4 border-b border-gold-royal/20">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+          {/* Official Source Mantra & Dholpur Location */}
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-gold-400 font-medium">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{isHi ? "॥ ॐ श्री जोरावर देवाय नमः ॥" : "|| Om Shri Jorawar Devaya Namah ||"}</span>
+            <span className="flex items-center gap-1.5 text-gold-royal font-serif font-semibold tracking-wider">
+              <Sparkles className="w-3 h-3 text-gold-soft" />
+              <span>{siteConfig.mantra}</span>
             </span>
-            <span className="hidden sm:inline-block text-stone-500">|</span>
-            <span className="hidden sm:flex items-center gap-1 text-stone-300">
-              <MapPin className="w-3 h-3 text-saffron-400" />
-              <span>{isHi ? "चूरू, राजस्थान" : "Churu, Rajasthan"}</span>
+            <span className="hidden sm:inline-block text-gold-royal/40">|</span>
+            <span className="hidden sm:flex items-center gap-1 text-sandstone-200/90 font-light">
+              <MapPin className="w-3 h-3 text-gold-soft" />
+              <span>{isHi ? "चितौरा, सैंपऊ, धौलपुर (राज.)" : "Chitaura, Saipau, Dholpur (Raj.)"}</span>
             </span>
+            <span className="hidden lg:inline-block text-gold-royal/40">|</span>
+            <a
+              href={`tel:${siteConfig.contact.phones[0].replace(/\D/g, "")}`}
+              className="hidden lg:flex items-center gap-1 text-sandstone-200/90 hover:text-gold-soft transition-colors"
+            >
+              <Phone className="w-3 h-3 text-emerald-400" />
+              <span>{siteConfig.contact.phones[0]}</span>
+            </a>
           </div>
-          <div className="flex items-center gap-4 text-stone-300">
-            <span className="hidden md:flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-gold-400" />
-              <span>{isHi ? "दर्शन: प्रातः 5:00 - दोपहर 12:30 | सायं 4:00 - रात्रि 10:00" : "Darshan: 5:00 AM - 12:30 PM | 4:00 PM - 10:00 PM"}</span>
+
+          {/* Timings, Devotee Portal & Admin Access */}
+          <div className="flex items-center gap-3 sm:gap-4 text-sandstone-200/90">
+            <span className="hidden md:flex items-center gap-1.5 text-cream-ivory/80">
+              <Clock className="w-3 h-3 text-gold-soft" />
+              <span>
+                {isHi
+                  ? "मंगला दर्शन: 04:00 AM | रात्रि दर्शन: 10:00 PM तक"
+                  : "Mangala: 04:00 AM | Night: Until 10:00 PM"}
+              </span>
             </span>
+            <span className="hidden md:inline-block text-gold-royal/40">|</span>
             <Link
               href={`/${locale}/auth/login`}
-              className="text-stone-300 hover:text-gold-400 transition-colors text-xs"
+              className="text-cream-ivory/90 hover:text-gold-soft transition-colors flex items-center gap-1 font-medium"
             >
-              {isHi ? "दर्शनार्थी पोर्टल" : "Devotee Portal"}
+              <User className="w-3 h-3 text-gold-soft" />
+              <span>{isHi ? "श्रद्धालु लॉगिन" : "Devotee Login"}</span>
             </Link>
-            <span className="text-stone-600">|</span>
+            <span className="text-gold-royal/40">|</span>
             <Link
               href="/admin/login"
-              className="text-stone-300 hover:text-gold-400 transition-colors text-xs underline decoration-stone-600"
+              className="text-sandstone-300 hover:text-gold-soft transition-colors underline decoration-gold-royal/30 hover:decoration-gold-soft"
             >
-              {dict.nav.admin}
+              {isHi ? "प्रशासन" : "Admin"}
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Main Navbar */}
+      {/* 2. Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Official Brand Identity */}
-          {/* Desktop & Tablet: Full Logo */}
-          <Link href={`/${locale}`} className="hidden sm:flex items-center group shrink-0">
+          {/* Official Full Brand Logo */}
+          <Link href={`/${locale}`} className="hidden sm:flex items-center group shrink-0 py-1">
             <img
               src="/branding/jorawar-dham-logo.png"
               alt="सिद्ध श्री जोरावर धाम सेवा समिति"
-              className="h-12 md:h-14 w-auto object-contain rounded-md"
+              className="h-12 md:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.01]"
             />
           </Link>
 
-          {/* Mobile: Sacred Icon + Trust Heading */}
+          {/* Official Icon + Name (Mobile) */}
           <Link href={`/${locale}`} className="flex sm:hidden items-center gap-2.5 group shrink-0">
             <img
               src="/branding/jorawar-dham-icon.png"
               alt="सिद्ध श्री जोरावर धाम"
-              className="h-10 w-10 object-contain rounded-full border border-gold-400/40 shadow-sm"
+              className="h-10 w-10 object-contain rounded-full border border-gold-royal/40 shadow-sm p-0.5 bg-maroon-deep"
             />
             <div>
-              <span className="block font-serif font-bold text-sm text-maroon-950 leading-tight">
+              <span className="block font-serif font-bold text-xs text-maroon-deep leading-tight">
                 सिद्ध श्री जोरावर धाम
               </span>
-              <span className="block text-[10px] text-saffron-700 font-medium">
-                {isHi ? "सेवा समिति" : "Seva Samiti"}
+              <span className="block text-[10px] text-maroon-primary font-medium">
+                {isHi ? "चितौरा, धौलपुर (राज.)" : "Chitaura, Dholpur"}
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden xl:flex items-center gap-1">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden xl:flex items-center gap-0.5">
             {primaryNavLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`relative px-3 py-2 text-xs font-semibold tracking-wide transition-all ${
                     isActive
-                      ? "text-maroon-900 bg-sandstone-200/90 shadow-sm"
-                      : "text-stone-700 hover:text-maroon-900 hover:bg-sandstone-100"
+                      ? "text-maroon-deep font-bold"
+                      : "text-stone-700 hover:text-maroon-primary"
                   }`}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
+                  {isActive && (
+                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-gold-soft via-gold-royal to-gold-soft rounded-full" />
+                  )}
                 </Link>
               );
             })}
@@ -150,15 +186,18 @@ export default function Navbar({ locale }: NavbarProps) {
               <button
                 type="button"
                 onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-stone-700 hover:text-maroon-900 hover:bg-sandstone-100 transition-all"
+                className="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-stone-700 hover:text-maroon-primary transition-all"
                 aria-expanded={moreDropdownOpen}
               >
-                <span>{isHi ? "अन्य पृष्ठ" : "More"}</span>
-                <ChevronDown className="w-3.5 h-3.5" />
+                <span>{isHi ? "अन्य सेवाएं" : "More"}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400" />
               </button>
 
               {moreDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-sandstone-200 py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute right-0 mt-2 w-52 bg-cream-ivory rounded-2xl shadow-sacred-lg border border-sandstone-200/80 py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="px-3 py-1.5 border-b border-sandstone-100 text-[10px] font-serif font-bold text-gold-royal uppercase tracking-wider">
+                    {isHi ? "दर्शन व अनुष्ठान" : "Darshan & Seva"}
+                  </div>
                   {secondaryNavLinks.map((sub) => {
                     const Icon = sub.icon;
                     const isActive = pathname === sub.href;
@@ -169,11 +208,11 @@ export default function Navbar({ locale }: NavbarProps) {
                         onClick={() => setMoreDropdownOpen(false)}
                         className={`flex items-center gap-2.5 px-4 py-2 text-xs font-medium transition-colors ${
                           isActive
-                            ? "bg-sandstone-100 text-maroon-950 font-semibold"
-                            : "text-stone-700 hover:bg-sandstone-50 hover:text-maroon-900"
+                            ? "bg-cream-warm text-maroon-deep font-bold"
+                            : "text-stone-700 hover:bg-cream-warm hover:text-maroon-deep"
                         }`}
                       >
-                        <Icon className="w-3.5 h-3.5 text-saffron-600 shrink-0" />
+                        <Icon className="w-3.5 h-3.5 text-gold-royal shrink-0" />
                         <span>{sub.label}</span>
                       </Link>
                     );
@@ -183,23 +222,24 @@ export default function Navbar({ locale }: NavbarProps) {
             </div>
           </nav>
 
-          {/* Language Switcher, Devotee CTA & Mobile Hamburger */}
+          {/* Right Controls: Language Switcher, Devotee CTA, Mobile Hamburger */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <Link
-              href={`/${locale}/auth/login`}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-maroon-950 bg-gradient-to-r from-gold-400 to-amber-500 hover:from-gold-500 hover:to-amber-600 shadow-sm transition-all"
-            >
-              <span>{isHi ? "श्रद्धालु सेवा" : "Devotee Portal"}</span>
-            </Link>
-
-            <Suspense fallback={<div className="w-20 h-8 bg-stone-100 rounded-full animate-pulse" />}>
+            <Suspense fallback={<div className="w-16 h-7 bg-stone-200/50 rounded-lg animate-pulse" />}>
               <LanguageSwitcher currentLocale={locale} />
             </Suspense>
+
+            <Link
+              href={`/${locale}/auth/login`}
+              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-maroon-deep bg-gradient-to-r from-gold-soft to-gold-royal hover:from-gold-royal hover:to-gold-soft shadow-sm hover:shadow-sacred-sm transition-all subtle-lift border border-gold-royal/30"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-maroon-deep" />
+              <span>{isHi ? "श्रद्धालु सेवा" : "Devotee Portal"}</span>
+            </Link>
 
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-xl text-stone-700 hover:text-maroon-900 hover:bg-sandstone-200 focus:outline-none focus:ring-2 focus:ring-saffron-500"
+              className="xl:hidden min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-stone-800 hover:text-maroon-deep hover:bg-sandstone-200/60 focus:outline-none focus:ring-2 focus:ring-gold-royal"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -208,22 +248,24 @@ export default function Navbar({ locale }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* 3. Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-sandstone-50 border-b border-sandstone-300 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-2 max-h-[80vh] overflow-y-auto">
-          {/* Official Trust Identity Card in Mobile Drawer */}
-          <div className="flex items-center gap-3 p-3 mb-2 rounded-2xl bg-white border border-sandstone-300 shadow-sm">
+        <div className="xl:hidden bg-cream-ivory border-b border-sandstone-300/70 px-4 pt-3 pb-6 space-y-3 shadow-sacred-lg animate-in slide-in-from-top-2 max-h-[85vh] overflow-y-auto">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-cream-warm border border-gold-royal/30 shadow-sacred-sm">
             <img
               src="/branding/jorawar-dham-icon.png"
               alt="सिद्ध श्री जोरावर धाम"
-              className="h-12 w-12 object-contain rounded-full border border-gold-400/50 shadow-sm shrink-0"
+              className="h-11 w-11 object-contain rounded-full border border-gold-royal/50 shadow-sm shrink-0 bg-maroon-deep p-0.5"
             />
-            <div>
-              <div className="font-serif font-bold text-sm text-maroon-950 leading-tight">
-                सिद्ध श्री जोरावर धाम सेवा समिति
+            <div className="min-w-0">
+              <div className="font-serif font-bold text-xs sm:text-sm text-maroon-deep leading-tight truncate">
+                {siteConfig.organization.nameHi}
               </div>
-              <div className="text-[10px] text-stone-500 font-mono mt-0.5">
-                रजि. नं. COOP/2023/DHOLPUR/201054
+              <div className="text-[10px] text-stone-500 font-mono mt-0.5 truncate">
+                {siteConfig.organization.registrationNumber}
+              </div>
+              <div className="text-[10px] text-gold-royal font-serif mt-0.5">
+                {siteConfig.mantra}
               </div>
             </div>
           </div>
@@ -231,9 +273,10 @@ export default function Navbar({ locale }: NavbarProps) {
           <Link
             href={`/${locale}/auth/login`}
             onClick={() => setMobileMenuOpen(false)}
-            className="block w-full px-4 py-2.5 rounded-xl text-sm font-bold bg-saffron-600 text-white shadow-sm text-center"
+            className="flex items-center justify-center gap-2 w-full min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold bg-maroon-deep text-cream-ivory shadow-sm text-center border border-gold-royal/30"
           >
-            {isHi ? "श्रद्धालु लॉगिन / पंजीकरण" : "Devotee Sign In / Register"}
+            <User className="w-4 h-4 text-gold-soft" />
+            <span>{isHi ? "श्रद्धालु लॉगिन / पंजीकरण" : "Devotee Portal Sign In"}</span>
           </Link>
 
           <div className="pt-1 space-y-1">
@@ -244,10 +287,10 @@ export default function Navbar({ locale }: NavbarProps) {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  className={`flex items-center min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-medium transition-colors ${
                     isActive
-                      ? "bg-maroon-900 text-white font-semibold shadow-sm"
-                      : "text-stone-800 hover:bg-sandstone-200"
+                      ? "bg-maroon-deep text-cream-ivory font-bold shadow-sm"
+                      : "text-stone-800 hover:bg-cream-warm"
                   }`}
                 >
                   {link.label}

@@ -1,4 +1,7 @@
-import { AlertTriangle, Bell, Pin } from "lucide-react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { AlertTriangle, Bell, Pin, ChevronLeft, ChevronRight, Pause, Play, Sparkles } from "lucide-react";
 import type { Notice } from "@prisma/client";
 import { Locale, localize, formatLocalizedDate } from "@/lib/utils/i18n";
 
@@ -10,53 +13,100 @@ interface LiveNoticeTickerProps {
 export default function LiveNoticeTicker({ notices, locale }: LiveNoticeTickerProps) {
   if (!notices || notices.length === 0) return null;
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const isHi = locale === "hi";
+
+  useEffect(() => {
+    if (isPaused || notices.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % notices.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isPaused, notices.length]);
+
+  const activeNotice = notices[currentIndex];
+  const title = localize(activeNotice, locale, "title");
+  const body = localize(activeNotice, locale, "body");
+  const isUrgent = activeNotice.priority === "URGENT";
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? notices.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % notices.length);
+  };
+
   return (
-    <div className="bg-gradient-to-r from-amber-500/10 via-saffron-500/15 to-amber-500/10 border-y border-amber-300/60 py-3 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-saffron-900 font-semibold text-sm shrink-0">
-          <span className="flex h-2.5 w-2.5 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-saffron-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-saffron-600"></span>
+    <div className="bg-cream-ivory border-y border-gold-royal/20 py-2.5 px-4 sm:px-6 shadow-sacred-sm">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        {/* Left: Badge / Icon */}
+        <div className="flex items-center gap-2 text-xs font-serif font-bold text-maroon-deep shrink-0">
+          <Sparkles className="w-3.5 h-3.5 text-gold-royal animate-pulse" />
+          <span className="uppercase tracking-wider hidden sm:inline">
+            {isHi ? "नवीनतम सूचना" : "Notice Board"}
           </span>
-          <Bell className="w-4 h-4 text-saffron-700" />
-          <span>{locale === "hi" ? "नवीनतम सूचना:" : "Notice Board:"}</span>
+          <span className="text-gold-royal/50 hidden sm:inline">|</span>
         </div>
 
-        <div className="flex-1 space-y-2 md:space-y-0">
-          {notices.slice(0, 2).map((notice) => {
-            const isUrgent = notice.priority === "URGENT";
-            const title = localize(notice, locale, "title");
-            const body = localize(notice, locale, "body");
+        {/* Center: Current Announcement Content */}
+        <div className="flex-1 min-w-0 flex items-center gap-2.5 text-xs text-stone-800">
+          {activeNotice.isPinned && (
+            <span className="inline-flex items-center gap-1 bg-sandstone-200/80 text-maroon-deep px-2 py-0.5 rounded text-[10px] font-semibold tracking-wide shrink-0">
+              <Pin className="w-2.5 h-2.5 text-gold-royal" />
+              <span>{isHi ? "स्थायी" : "Pinned"}</span>
+            </span>
+          )}
 
-            return (
-              <div
-                key={notice.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs sm:text-sm text-stone-800"
-              >
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {notice.isPinned && (
-                    <span className="inline-flex items-center gap-1 bg-stone-200 text-stone-700 px-2 py-0.5 rounded text-[11px] font-medium">
-                      <Pin className="w-2.5 h-2.5" />
-                      {locale === "hi" ? "स्थायी" : "Pinned"}
-                    </span>
-                  )}
-                  {isUrgent && (
-                    <span className="inline-flex items-center gap-1 bg-red-600 text-white px-2 py-0.5 rounded text-[11px] font-semibold tracking-wide">
-                      <AlertTriangle className="w-2.5 h-2.5" />
-                      {locale === "hi" ? "अति आवश्यक" : "URGENT"}
-                    </span>
-                  )}
-                </div>
-                <p className="line-clamp-1 font-medium text-stone-900">
-                  {title} <span className="font-normal text-stone-600">— {body}</span>
-                </p>
-                <span className="text-[11px] text-stone-500 whitespace-nowrap hidden lg:inline-block">
-                  ({formatLocalizedDate(notice.publishedAt, locale)})
-                </span>
-              </div>
-            );
-          })}
+          {isUrgent && (
+            <span className="inline-flex items-center gap-1 bg-red-700 text-white px-2 py-0.5 rounded text-[10px] font-bold tracking-wider shrink-0 animate-pulse">
+              <AlertTriangle className="w-2.5 h-2.5" />
+              <span>{isHi ? "अति आवश्यक" : "URGENT"}</span>
+            </span>
+          )}
+
+          <p className="truncate font-medium text-stone-900">
+            <span className="font-semibold text-maroon-deep">{title}</span>
+            {body && <span className="text-stone-600 font-normal ml-1.5">— {body}</span>}
+          </p>
+
+          <span className="text-[11px] text-stone-400 font-mono shrink-0 hidden lg:inline-block">
+            {formatLocalizedDate(activeNotice.publishedAt, locale)}
+          </span>
         </div>
+
+        {/* Right: Controls (Prev, Pause/Play, Next) */}
+        {notices.length > 1 && (
+          <div className="flex items-center gap-1 shrink-0 text-stone-500">
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="p-1 rounded-lg hover:bg-cream-warm hover:text-maroon-deep transition-colors"
+              aria-label="Previous Notice"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsPaused(!isPaused)}
+              className="p-1 rounded-lg hover:bg-cream-warm hover:text-maroon-deep transition-colors"
+              aria-label={isPaused ? "Play Notices" : "Pause Notices"}
+            >
+              {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleNext}
+              className="p-1 rounded-lg hover:bg-cream-warm hover:text-maroon-deep transition-colors"
+              aria-label="Next Notice"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

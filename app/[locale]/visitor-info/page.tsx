@@ -72,8 +72,8 @@ export default async function VisitorInfoPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {isHi
-                ? "निकटतम प्रमुख रेलवे स्टेशन चूरू जंक्शन (Churu Junction) एवं सादुलपुर हैं। यहाँ से दिल्ली, जयपुर, बीकानेर एवं जोधपुर हेतु दैनिक एक्सप्रेस रेलगाड़ियां उपलब्ध हैं। स्टेशन से मंदिर तक नियमित टैक्सियां संचालित हैं।"
-                : "The primary railway heads are Churu Junction and Sadulpur Junction, well connected to Delhi, Jaipur, Bikaner, and Jodhpur. Local pre-paid taxis and auto-rickshaws are available directly outside."}
+                ? "निकटतम प्रमुख रेलवे स्टेशन धौलपुर जंक्शन (25 कि.मी.) एवं भरतपुर स्टेशन (75 कि.मी.) हैं। साथ ही आगरा (60 कि.मी.) व ग्वालियर (90 कि.मी.) प्रमुख रेल संपर्क बिंदु हैं। स्टेशन से चितौरा हेतु नियमित टैक्सियां व स्थानीय साधन उपलब्ध हैं।"
+                : "The primary railway stations are Dholpur Junction (25 km) and Bharatpur Station (75 km), along with major junctions at Agra (60 km) and Gwalior (90 km). Regular taxis and transport are available to Chitaura."}
             </p>
           </div>
 
@@ -86,8 +86,8 @@ export default async function VisitorInfoPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {isHi
-                ? "राष्ट्रीय राजमार्ग NH-52 एवं NH-11 द्वारा जयपुर (205 किमी), दिल्ली (245 किमी) एवं बीकानेर (180 किमी) से सीधी सुगम सड़क कनेक्टिविटी। धाम प्रांगण में विशाल निःशुल्क वाहन पार्किंग उपलब्ध है।"
-                : "Smooth highway connectivity via NH-52 and NH-11 from Jaipur (205 km), Delhi (245 km), and Bikaner (180 km). Extensive complimentary, monitored parking is provided within temple grounds."}
+                ? "धौलपुर शहर से 25 कि.मी., खरोगढ़ (उ.प्र.) से 17 कि.मी., आगरा से 60 कि.मी., ग्वालियर से 90 कि.मी., भरतपुर से 75 कि.मी. एवं करौली से 105 कि.मी. की दूरी पर स्थित है। सुगम पक्की सड़कों द्वारा सीधी कनेक्टिविटी है।"
+                : "Connected via well-paved roads: Dholpur (25 km), Kheragarh UP (17 km), Agra (60 km), Gwalior (90 km), Bharatpur (75 km), and Karauli (105 km)."}
             </p>
           </div>
 
@@ -100,8 +100,8 @@ export default async function VisitorInfoPage({
             </h3>
             <p className="text-sm text-stone-600 leading-relaxed">
               {isHi
-                ? "निकटतम घरेलू एवं अंतरराष्ट्रीय हवाई अड्डा जयपुर (Jaipur International Airport - JAI) लगभग 210 किमी दूर स्थित है, जहाँ से कैब अथवा सुपरफास्ट ट्रेन द्वारा पहुँचा जा सकता है।"
-                : "The nearest commercial airport is Jaipur International Airport (JAI), approx. 210 km away, connected via express trains and highway rentals."}
+                ? "निकटतम हवाई अड्डे आगरा एयरपोर्ट (लगभग 60 कि.मी.) एवं ग्वालियर एयरपोर्ट (लगभग 90 कि.मी.) हैं। यहाँ से टैक्सी अथवा बस द्वारा सीधे धाम पहुंचा जा सकता है।"
+                : "The nearest airports are Agra Airport (approx. 60 km) and Gwalior Airport (approx. 90 km), with smooth taxi connectivity to the Dham."}
             </p>
           </div>
         </div>
@@ -209,11 +209,11 @@ export default async function VisitorInfoPage({
           </p>
         </div>
         <a
-          href="tel:+919876543210"
+          href="tel:+919530106218"
           className="inline-flex items-center gap-2 bg-gradient-to-r from-saffron-500 to-amber-600 hover:from-saffron-600 hover:to-amber-700 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md transition-all shrink-0"
         >
           <PhoneCall className="w-4 h-4" />
-          <span>+91-98765-43210</span>
+          <span>+91-9530106218</span>
         </a>
       </div>
     </div>

@@ -1,7 +1,21 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Locale, isValidLocale } from "@/lib/utils/i18n";
 import { notFound } from "next/navigation";
-import { BookOpen, Flame, History, Award } from "lucide-react";
+import {
+  History as HistoryIcon,
+  Flame,
+  Sparkles,
+  MapPin,
+  Calendar,
+  Compass,
+  Building2,
+  ArrowRight,
+  ShieldCheck,
+} from "lucide-react";
+import SacredDivider from "@/components/public/SacredDivider";
+import SectionHeader from "@/components/public/SectionHeader";
+import { siteConfig } from "@/lib/content/site";
 
 export async function generateMetadata({
   params,
@@ -13,11 +27,11 @@ export async function generateMetadata({
 
   return {
     title: isHi
-      ? "पवित्र इतिहास एवं परंपरा - अखंड धूणा व तपोलीला | श्री जोरावर धाम"
-      : "Sacred History & Tradition - Eternal Flame & Penance | Shri Jorawar Dham",
+      ? "इतिहास | सिद्ध श्री जोरावर धाम, चितौरा (धौलपुर)"
+      : "History | Siddh Shri Jorawar Dham, Chitaura (Dholpur)",
     description: isHi
-      ? "राजस्थान की मरुधरा पर परम पूज्य जोरावर जी महाराज द्वारा स्थापित अखंड धूणे, तपस्या और धाम का पावन इतिहास।"
-      : "Explore the sacred history of Param Pujya Jorawar Ji Maharaj, the eternal sacred flame (Akhand Dhoona), and centuries of spiritual heritage.",
+      ? "भगवान जोरावर जी का करीब 130 वर्ष पूर्व जन्म, भक्ति, साधना, 24 मार्च 1962 समाधि एवं सिद्ध श्री जोरावर धाम का पावन इतिहास।"
+      : "The sacred history of Bhagwan Jorawar Ji Maharaj, born ~130 years ago in Chitaura (Dholpur), his samadhi on 24 March 1962, and temple traditions.",
     alternates: {
       canonical: `/${locale}/history`,
       languages: {
@@ -36,67 +50,137 @@ export default async function HistoryPage({
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
 
+  const isHi = locale === "hi";
+
   return (
-    <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-      <div className="text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-saffron-700 bg-saffron-50 border border-saffron-200 px-3.5 py-1 rounded-full">
-          <History className="w-3.5 h-3.5 text-saffron-600" />
-          <span>{locale === "hi" ? "पावन इतिहास" : "Sacred History"}</span>
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-bold font-serif text-maroon-950">
-          {locale === "hi" ? "श्री जोरावर धाम का दिव्य इतिहास" : "The Sacred History of Shri Jorawar Dham"}
+    <div className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-16">
+      {/* 1. Header */}
+      <div className="text-center space-y-4 border-b border-sandstone-200 pb-10">
+        <div className="inline-flex items-center gap-2 bg-cream-warm border border-gold-royal/30 px-4 py-1.5 rounded-full text-gold-royal text-xs font-serif font-bold uppercase tracking-widest shadow-sacred-sm">
+          <HistoryIcon className="w-3.5 h-3.5" />
+          <span>{isHi ? "पावन प्राकट्य एवं तपोगाथा" : "Sacred History"}</span>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl font-serif font-bold text-maroon-deep">
+          {isHi ? "इतिहास" : "Sacred History"}
         </h1>
-        <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-          {locale === "hi"
-            ? "परम पूज्य जोरावर जी महाराज की तपस्या, त्याग और राजस्थान की वीर धरा पर स्थापित पावन परंपरा।"
-            : "The sacred penance and enduring spiritual tradition established on the revered soil of Rajasthan."}
+
+        <p className="text-xs sm:text-sm font-serif text-stone-600 max-w-2xl mx-auto leading-relaxed">
+          {isHi
+            ? "परम पूज्य भगवान जोरावर जी महाराज का दिव्य अवतरण, भक्ति-साधना, लोक-कल्याण एवं पावन समाधि का प्रामाणिक वृत्तांत।"
+            : "The authentic spiritual narrative of Param Pujya Bhagwan Jorawar Ji Maharaj in Chitaura (Dholpur)."}
         </p>
+
+        <SacredDivider variant="gold" className="my-2" />
       </div>
 
-      {/* Timeline & Narratives */}
-      <div className="space-y-10">
-        <div className="bg-white rounded-2xl p-8 sm:p-10 border border-sandstone-200 shadow-sm space-y-6">
-          <div className="flex items-center gap-3 text-maroon-900">
-            <Flame className="w-7 h-7 text-saffron-600" />
-            <h2 className="text-2xl font-bold font-serif">
-              {locale === "hi" ? "अखंड धूणे का प्राकट्य एवं तपस्या" : "The Eternal Flame & Divine Penance"}
-            </h2>
-          </div>
-          <p className="text-stone-700 leading-relaxed text-base sm:text-lg">
-            {locale === "hi"
-              ? "प्राचीन काल में परम पूज्य जोरावर जी महाराज ने इस पावन भूमि को अपनी साधना स्थली चुना। घोर वन एवं मरुभूमि के मध्य उन्होंने वर्षों तक कठोर तपस्या कर लोक-कल्याण का वरदान प्राप्त किया। धाम में स्थापित अखंड धूणा उसी दिव्य तप की ज्योति का प्रतीक है, जो आज भी दिन-रात प्रज्वलित रहता है। भक्तजन इस पवित्र विभूति को माथे पर लगाकर समस्त कष्टों से मुक्ति पाते हैं।"
-              : "Centuries ago, Param Pujya Jorawar Ji Maharaj chose this desolate desert landscape of Rajasthan for profound meditation. Amidst intense penance and austerity, he sanctified this soil. The Akhand Dhoona (eternal sacred fire) established by him burns unbroken to this day, radiating spiritual blessings and healing grace."}
-          </p>
+      {/* 2. Critical Milestones Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center space-y-1 shadow-sacred-sm">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-wider text-stone-500 block">
+            {isHi ? "पावन प्राकट्य" : "Birth"}
+          </span>
+          <span className="text-base sm:text-lg font-serif font-bold text-maroon-deep block">
+            ~130 वर्ष पूर्व
+          </span>
+          <span className="text-[11px] text-mutedText block">चितौरा, धौलपुर रियासत</span>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 sm:p-10 border border-sandstone-200 shadow-sm space-y-6">
-          <div className="flex items-center gap-3 text-maroon-900">
-            <BookOpen className="w-7 h-7 text-amber-600" />
-            <h2 className="text-2xl font-bold font-serif">
-              {locale === "hi" ? "राजस्थान की भक्ति धारा में स्थान" : "Position in Rajasthan's Bhakti Tradition"}
-            </h2>
-          </div>
-          <p className="text-stone-700 leading-relaxed text-base sm:text-lg">
-            {locale === "hi"
-              ? "राजस्थान संतों और शूरवीरों की भूमि रहा है। श्री जोरावर धाम की गणना शेखावाटी और बीकानेर अंचल के सर्वाधिक पूजनीय धामों में होती है। यहाँ जाति, संप्रदाय और वर्ग के बंधनों से परे होकर लाखों श्रद्धालु अपनी मनोकामना पूर्ति हेतु शीश नवाने आते हैं।"
-              : "Rajasthan's rich heritage of devotional movements (Bhakti) found one of its purest sanctuaries at Shri Jorawar Dham. Transcending social barriers of caste and creed, pilgrims across North India undertake annual foot pilgrimages (Padyatras) to honor the Saint's legacy."}
-          </p>
+        <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center space-y-1 shadow-sacred-sm">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-wider text-stone-500 block">
+            {isHi ? "महासमाधि तिथि" : "Samadhi"}
+          </span>
+          <span className="text-base sm:text-lg font-serif font-bold text-maroon-deep block">
+            24 मार्च 1962
+          </span>
+          <span className="text-[11px] text-mutedText block">दोपहर 12:00 बजे (सप्तदीप)</span>
         </div>
 
-        <div className="bg-white rounded-2xl p-8 sm:p-10 border border-sandstone-200 shadow-sm space-y-6">
-          <div className="flex items-center gap-3 text-maroon-900">
-            <Award className="w-7 h-7 text-emerald-600" />
-            <h2 className="text-2xl font-bold font-serif">
-              {locale === "hi" ? "आधुनिक समय में धाम का विस्तार" : "Temple Trust & Modern Expansion"}
-            </h2>
-          </div>
-          <p className="text-stone-700 leading-relaxed text-base sm:text-lg">
-            {locale === "hi"
-              ? "श्रद्धालुओं की बढ़ती संख्या को देखते हुए पंजीकृत ट्रस्ट द्वारा मंदिर परिसर का जीर्णोद्धार, भव्य संगमरमर प्रांगण, धर्मशालाएँ, अत्याधुनिक गौशाला एवं 24 घंटे चिकित्सालय की व्यवस्था की गई है ताकि तीर्थयात्रियों को किसी भी असुविधा का सामना न करना पड़े।"
-              : "To accommodate growing devotee congregations, the registered Trust has developed extensive pilgrim dormitories, community dining facilities, a cow sanctuary (Gaushala), and medical aid stations, preserving ancient sanctity while ensuring pilgrim comfort."}
-          </p>
+        <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center space-y-1 shadow-sacred-sm">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-wider text-stone-500 block">
+            {isHi ? "वार्षिक मेला" : "Annual Mela"}
+          </span>
+          <span className="text-base sm:text-lg font-serif font-bold text-gold-royal block">
+            होली पश्चात तीज
+          </span>
+          <span className="text-[11px] text-mutedText block">विशाल श्रद्धालु समागम</span>
+        </div>
+
+        <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center space-y-1 shadow-sacred-sm">
+          <span className="text-[10px] uppercase font-serif font-bold tracking-wider text-stone-500 block">
+            {isHi ? "प्रबंधन समिति" : "Management"}
+          </span>
+          <span className="text-xs sm:text-sm font-serif font-bold text-emerald-800 block">
+            सिद्ध श्री जोरावर धाम
+          </span>
+          <span className="text-[10px] font-mono text-mutedText block">COOP/2023/DHOLPUR</span>
         </div>
       </div>
+
+      {/* 3. The 8 Verified History Chapters */}
+      <div className="space-y-6">
+        {siteConfig.historyChapters.map((chapter) => (
+          <article
+            key={chapter.number}
+            className="bg-cream-ivory rounded-3xl p-6 sm:p-10 border border-sandstone-200/90 shadow-sacred-sm hover:shadow-sacred-md transition-all subtle-lift space-y-3"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-9 h-9 rounded-xl bg-maroon-deep text-gold-soft font-mono font-bold text-xs flex items-center justify-center shrink-0 border border-gold-royal/30">
+                {chapter.number}
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-maroon-deep">
+                {chapter.titleHi}
+              </h2>
+            </div>
+            <p className="text-stone-700 text-sm sm:text-base leading-relaxed font-light pl-0 sm:pl-12">
+              {chapter.contentHi}
+            </p>
+          </article>
+        ))}
+      </div>
+
+      {/* 4. Location Distances from Source Material */}
+      <section className="bg-cream-warm rounded-3xl border border-gold-royal/30 p-8 sm:p-10 shadow-sacred-sm space-y-6">
+        <div className="flex items-center gap-2 text-gold-royal">
+          <Compass className="w-5 h-5" />
+          <span className="text-xs font-serif font-bold uppercase tracking-widest">
+            {isHi ? "भौगोलिक स्थिति एवं दूरियां" : "Location Distances"}
+          </span>
+        </div>
+
+        <h3 className="text-xl sm:text-2xl font-serif font-bold text-maroon-deep">
+          {isHi ? "प्रमुख नगरों से धाम की दूरी" : "Distances from Surrounding Cities"}
+        </h3>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center">
+            <span className="text-xs text-stone-500 font-serif block">धौलपुर शहर</span>
+            <span className="text-lg font-serif font-bold text-maroon-deep block mt-1">25 कि.मी.</span>
+          </div>
+          <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center">
+            <span className="text-xs text-stone-500 font-serif block">आगरा (उ.प्र.)</span>
+            <span className="text-lg font-serif font-bold text-maroon-deep block mt-1">60 कि.मी.</span>
+          </div>
+          <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center">
+            <span className="text-xs text-stone-500 font-serif block">ग्वालियर (म.प्र.)</span>
+            <span className="text-lg font-serif font-bold text-maroon-deep block mt-1">90 कि.मी.</span>
+          </div>
+          <div className="bg-cream-ivory p-4 rounded-2xl border border-sandstone-200 text-center">
+            <span className="text-xs text-stone-500 font-serif block">भरतपुर</span>
+            <span className="text-lg font-serif font-bold text-maroon-deep block mt-1">95 कि.मी.</span>
+          </div>
+        </div>
+
+        <div className="pt-2 flex justify-end">
+          <Link
+            href={`/${locale}/how-to-reach`}
+            className="inline-flex items-center gap-2 text-xs font-serif font-bold text-maroon-deep hover:text-gold-royal transition-colors group"
+          >
+            <span>{isHi ? "विस्तृत यात्रा मार्गदर्शिका (रेल व सड़क मार्ग)" : "Detailed Travel Route & Guide"}</span>
+            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

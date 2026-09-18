@@ -78,11 +78,11 @@ export default async function FaqPage({
           </p>
         </div>
         <a
-          href="tel:+919876543210"
+          href="tel:+919530106218"
           className="inline-flex items-center gap-2 bg-maroon-900 hover:bg-maroon-800 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm shrink-0"
         >
           <PhoneCall className="w-4 h-4 text-gold-400" />
-          <span>+91-98765-43210</span>
+          <span>+91-9530106218</span>
         </a>
       </div>
     </div>

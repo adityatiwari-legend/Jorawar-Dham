@@ -2,8 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Locale, isValidLocale } from "@/lib/utils/i18n";
 import { notFound } from "next/navigation";
-import { HeartHandshake, ShieldAlert, Building2, CheckCircle, FileText, Phone, ArrowRight, Utensils, Award } from "lucide-react";
+import {
+  HeartHandshake,
+  ShieldCheck,
+  Building2,
+  CheckCircle,
+  FileText,
+  Phone,
+  ArrowRight,
+  Sparkles,
+  Layers,
+  Award,
+  AlertCircle,
+  Info,
+} from "lucide-react";
 import DonationPortal from "@/components/donation/DonationPortal";
+import SacredDivider from "@/components/public/SacredDivider";
+import SectionHeader from "@/components/public/SectionHeader";
+import { siteConfig } from "@/lib/content/site";
 
 export async function generateMetadata({
   params,
@@ -15,11 +31,11 @@ export async function generateMetadata({
 
   return {
     title: isHi
-      ? "दान व सहयोग - अधिकृत बैंक खाते एवं 80G आयकर छूट | श्री जोरावर धाम"
-      : "Donation & Support - Official Bank Accounts & 80G Tax Exemption | Shri Jorawar Dham",
+      ? "आपका सहयोग | सिद्ध श्री जोरावर धाम सेवा समिति, चितौरा (धौलपुर)"
+      : "Your Contribution | Siddh Shri Jorawar Dham Seva Samiti, Chitaura (Dholpur)",
     description: isHi
-      ? "श्री जोरावर धाम तीर्थ ट्रस्ट के अन्नक्षेत्र, गौशाला एवं धर्मार्थ प्रकल्पों हेतु अधिकृत बैंक खाते, NEFT/RTGS विवरण एवं दान रसीद प्रक्रिया।"
-      : "Official bank transfer details, 80G tax exemption guidelines, and verified donation channels for Shri Jorawar Dham Pilgrimage Trust.",
+      ? "सिद्ध श्री जोरावर धाम मंदिर निर्माण एवं सेवा प्रकल्पों हेतु सहयोग: आर्थिक सहयोग, सामग्री दान, श्रमदान एवं 'एक ईंट, एक दान' अभियान।"
+      : "Support temple construction and charitable seva at Shri Jorawar Dham: financial contribution, materials donation, shramdaan, and brick campaign.",
     alternates: {
       canonical: `/${locale}/donation`,
       languages: {
@@ -41,200 +57,190 @@ export default async function DonationPage({
   const isHi = locale === "hi";
 
   return (
-    <div className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-12">
-      {/* Official Branding Header */}
-      <div className="flex flex-col items-center text-center space-y-4 border-b border-sandstone-300 pb-10">
-        <div className="p-2 bg-white rounded-2xl border border-sandstone-300 shadow-md">
+    <div className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-16">
+      {/* 1. Header */}
+      <div className="text-center space-y-4 border-b border-sandstone-200 pb-10">
+        <div className="p-2 bg-cream-ivory rounded-2xl border border-gold-royal/30 shadow-sacred-sm inline-block">
           <img
             src="/branding/jorawar-dham-logo.png"
             alt="सिद्ध श्री जोरावर धाम सेवा समिति"
-            className="h-16 sm:h-22 w-auto object-contain rounded-lg"
+            className="h-16 sm:h-20 w-auto object-contain rounded-md"
           />
         </div>
+
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-4xl font-bold font-serif text-maroon-950">
-            {isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति — धर्मार्थ दान" : "Siddh Shri Jorawar Dham Seva Samiti — Sacred Donations"}
-          </h1>
-          <p className="text-xs sm:text-sm font-mono text-saffron-800 font-semibold">
-            {isHi ? "पंजीकरण संख्या: COOP/2023/DHOLPUR/201054" : "Registration No.: COOP/2023/DHOLPUR/201054"}
-          </p>
-        </div>
-        <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed">
-          {isHi
-            ? "अन्नक्षेत्र, कामधेनु गौशाला, निःशुल्क चिकित्सा एवं मंदिर विकास हेतु अधिकृत दान सूचना।"
-            : "Official donation guidelines for the free community kitchen, cow sanctuary, and pilgrim welfare facilities."}
-        </p>
-      </div>
-
-      {/* Critical Anti-Fraud Advisory Banner */}
-      <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-6 sm:p-8 space-y-4">
-        <div className="flex items-center gap-3 text-red-900 font-bold text-lg font-serif">
-          <ShieldAlert className="w-6 h-6 text-red-600 shrink-0" />
-          <span>{isHi ? "अति महत्वपूर्ण सुरक्षा चेतावनी एवं सतर्कता" : "Critical Devotee Security Advisory"}</span>
-        </div>
-        <p className="text-sm text-red-950 leading-relaxed">
-          {isHi
-            ? "धाम में सभी श्रद्धालुओं के लिए प्रवेश एवं दर्शन पूर्णतः निःशुल्क हैं। श्री जोरावर धाम ट्रस्ट किसी भी व्यक्ति को व्यक्तिगत खातों अथवा अनधिकृत UPI पर धन स्वीकार करने की अनुमति नहीं देता। कृपया केवल नीचे दिए गए अधिकृत ट्रस्ट बैंक खातों में ही सहयोग राशि प्रेषित करें अथवा मंदिर परिसर स्थित मुख्य कार्यालय दान काउंटर पर अधिकृत पक्की रसीद प्राप्त कर नकद दान दें।"
-            : "Sanctum entry and darshan are strictly free for all devotees. Shri Jorawar Dham Trust NEVER authorizes any individual, agent, or intermediary to collect donations via personal UPI IDs or personal accounts. Donations are accepted exclusively via the official Trust bank accounts listed below or at the registered temple office counter where an authorized stamped receipt is provided immediately."}
-        </p>
-      </div>
-
-      {/* Interactive Online Donation Portal (Razorpay / UPI / NetBanking) */}
-      <DonationPortal locale={locale} />
-
-      {/* Trust Bank Accounts Grid */}
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <h2 className="text-2xl font-bold text-maroon-950 font-serif">
-            {isHi ? "अधिकृत ट्रस्ट बैंक खाते (NEFT / RTGS / IMPS)" : "Official Trust Bank Accounts (NEFT / RTGS / IMPS)"}
-          </h2>
-          <span className="text-xs text-stone-500 font-medium bg-sandstone-100 px-3 py-1 rounded-full w-fit">
-            {isHi ? "पंजीकृत धर्मार्थ ट्रस्ट" : "Registered Charitable Trust"}
+          <span className="text-xs font-serif font-bold text-gold-royal uppercase tracking-widest block">
+            ॥ {siteConfig.mantra} ॥
           </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Account 1: State Bank of India */}
-          <div className="bg-white rounded-2xl p-7 border border-sandstone-200 shadow-sm space-y-4">
-            <div className="flex items-center gap-3 border-b border-sandstone-200 pb-3">
-              <Building2 className="w-6 h-6 text-saffron-600" />
-              <div>
-                <h3 className="font-bold text-lg text-stone-900 font-serif">
-                  {isHi ? "भारतीय स्टेट बैंक (SBI)" : "State Bank of India (SBI)"}
-                </h3>
-                <span className="text-xs text-stone-500">{isHi ? "चूरू मुख्य शाखा, राजस्थान" : "Churu Main Branch, Rajasthan"}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 text-sm text-stone-700 font-mono">
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाता धारक का नाम:" : "Account Beneficiary:"}</span>
-                <strong className="text-stone-900 font-sans">SHRI JORAWAR DHAM TEERTH TRUST</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाता संख्या (A/C No):" : "Account Number:"}</span>
-                <strong className="text-base text-maroon-900 tracking-wider">39485720194</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "आईएफएससी कोड (IFSC):" : "IFSC Code:"}</span>
-                <strong className="text-base text-stone-900">SBIN0001234</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाते का प्रकार:" : "Account Type:"}</span>
-                <span className="font-sans text-stone-800">{isHi ? "चालू खाता (Current Account)" : "Current Account"}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Account 2: Punjab National Bank */}
-          <div className="bg-white rounded-2xl p-7 border border-sandstone-200 shadow-sm space-y-4">
-            <div className="flex items-center gap-3 border-b border-sandstone-200 pb-3">
-              <Building2 className="w-6 h-6 text-amber-600" />
-              <div>
-                <h3 className="font-bold text-lg text-stone-900 font-serif">
-                  {isHi ? "पंजाब नेशनल बैंक (PNB)" : "Punjab National Bank (PNB)"}
-                </h3>
-                <span className="text-xs text-stone-500">{isHi ? "चूरू शाखा, राजस्थान" : "Churu Branch, Rajasthan"}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 text-sm text-stone-700 font-mono">
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाता धारक का नाम:" : "Account Beneficiary:"}</span>
-                <strong className="text-stone-900 font-sans">SHRI JORAWAR DHAM SEVA TRUST</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाता संख्या (A/C No):" : "Account Number:"}</span>
-                <strong className="text-base text-maroon-900 tracking-wider">0456002100084729</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "आईएफएससी कोड (IFSC):" : "IFSC Code:"}</span>
-                <strong className="text-base text-stone-900">PUNB0045600</strong>
-              </div>
-              <div>
-                <span className="text-xs text-stone-500 block font-sans">{isHi ? "खाते का प्रकार:" : "Account Type:"}</span>
-                <span className="font-sans text-stone-800">{isHi ? "चालू खाता (Current Account)" : "Current Account"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 80G Tax Exemption & Receipt Process */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-sandstone-100/80 rounded-2xl p-7 border border-sandstone-300 space-y-4">
-          <div className="flex items-center gap-2.5 text-maroon-950 font-bold text-lg font-serif">
-            <Award className="w-6 h-6 text-saffron-700" />
-            <span>{isHi ? "80G आयकर छूट प्रमाणपत्र" : "Section 80G Income Tax Benefits"}</span>
-          </div>
-          <p className="text-sm text-stone-700 leading-relaxed">
-            {isHi
-              ? "श्री जोरावर धाम तीर्थ ट्रस्ट भारत सरकार के आयकर अधिनियम 1961 की धारा 80G के अंतर्गत पंजीकृत है। दानदाता को प्रदान की जाने वाली अधिकृत रसीद पर 80G छूट का लाभ अनुमन्य है।"
-              : "Donations to Shri Jorawar Dham Pilgrimage Trust are eligible for tax deductions under Section 80G of the Indian Income Tax Act 1961. Official 80G certificates are issued upon bank verification."}
+          <h1 className="text-3xl sm:text-5xl font-serif font-bold text-maroon-deep">
+            {isHi ? "आपका सहयोग" : "Your Contribution"}
+          </h1>
+          <p className="text-xs font-mono text-stone-500">
+            {siteConfig.organization.nameHi} • रजि. नं. {siteConfig.organization.registrationNumber}
           </p>
-          <div className="pt-2 text-xs text-stone-600 space-y-1 bg-white p-3 rounded-xl border border-sandstone-200">
-            <div><strong>{isHi ? "ट्रस्ट पैन (PAN):" : "Trust PAN:"}</strong> AABTS9284F</div>
-            <div><strong>{isHi ? "80G पंजीयन संख्या:" : "80G Registration No:"}</strong> CIT(E)/JAIPUR/80G/2022-23/A/10492</div>
-          </div>
         </div>
 
-        <div className="bg-sandstone-100/80 rounded-2xl p-7 border border-sandstone-300 space-y-4">
-          <div className="flex items-center gap-2.5 text-maroon-950 font-bold text-lg font-serif">
-            <FileText className="w-6 h-6 text-amber-700" />
-            <span>{isHi ? "दान रसीद कैसे प्राप्त करें?" : "How to Receive Donation Receipt"}</span>
-          </div>
-          <p className="text-sm text-stone-700 leading-relaxed">
-            {isHi
-              ? "बैंक अंतरण (NEFT / RTGS) करने के पश्चात कृपया अंतरण यूटीआर संख्या (UTR), अपना नाम, पैन नंबर एवं डाक पता trust@jorawardham.org पर ईमेल करें अथवा हमारे कार्यालय व्हाट्सएप नंबर पर प्रेषित करें।"
-              : "After completing your bank transfer (NEFT/RTGS), please email the transaction reference (UTR number), full donor name, PAN number, and mailing address to trust@jorawardham.org or Trust helpline."}
+        <p className="text-xs sm:text-sm text-stone-600 max-w-2xl mx-auto font-light leading-relaxed">
+          {isHi
+            ? "परम पूज्य भगवान जोरावर धाम मंदिर निर्माण, नित्य अन्नक्षेत्र एवं जनकल्याणकारी प्रकल्पों में आपका स्वैच्छिक सहयोग सादर प्रार्थनीय है।"
+            : "Your voluntary contribution supports the sacred temple construction, daily free meals, and pilgrim amenities."}
+        </p>
+
+        <SacredDivider variant="gold" className="my-2" />
+      </div>
+
+      {/* 2. Three Contribution Methods (From Source Material) */}
+      <section className="space-y-8">
+        <SectionHeader
+          eyebrow={isHi ? "सहयोग के प्रकार" : "Contribution Channels"}
+          title={isHi ? "सहयोग के तीन प्रमुख माध्यम" : "Three Ways to Contribute"}
+          subtitle={
+            isHi
+              ? "प्रत्येक श्रद्धालु अपनी श्रद्धा एवं सामर्थ्य के अनुसार निम्न माध्यमों से पुण्य लाभ प्राप्त कर सकते हैं"
+              : "Devotees may support the sacred mission through monetary support, construction materials, or voluntary service"
+          }
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {siteConfig.donationMethods.map((method) => (
+            <div
+              key={method.step}
+              className="bg-cream-ivory rounded-3xl p-6 sm:p-8 border border-sandstone-200 shadow-sacred-sm hover:shadow-sacred-md transition-all subtle-lift space-y-4"
+            >
+              <span className="w-10 h-10 rounded-2xl bg-maroon-deep text-gold-soft font-mono font-bold text-sm flex items-center justify-center border border-gold-royal/30">
+                {method.step}
+              </span>
+              <h3 className="text-xl font-serif font-bold text-maroon-deep">
+                {method.titleHi}
+              </h3>
+              <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-light">
+                {method.descHi}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Campaign Section: "एक ईंट, एक दान — भगवान जोरावर के सम्मान में समर्पण" */}
+      <section className="sacred-gradient-card rounded-3xl text-cream-ivory p-8 sm:p-12 lg:p-14 shadow-devotional-lg relative overflow-hidden border border-gold-royal/40 space-y-6">
+        <div className="space-y-3 max-w-3xl">
+          <span className="inline-flex items-center gap-2 bg-gold-royal/20 text-gold-soft px-3.5 py-1.5 rounded-full text-xs font-serif font-semibold uppercase tracking-wider border border-gold-royal/40">
+            <Layers className="w-4 h-4 text-gold-royal" />
+            <span>{isHi ? "विशेष अभियान" : "Special Campaign"}</span>
+          </span>
+
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold leading-tight text-cream-ivory">
+            {siteConfig.brickCampaign.taglineHi}
+          </h2>
+
+          <p className="text-sandstone-200 text-sm sm:text-base leading-relaxed font-light">
+            {siteConfig.brickCampaign.descriptionHi}
           </p>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-white p-3 rounded-xl border border-sandstone-200">
-            <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{isHi ? "दान सहायता दूरभाष: +91-98765-43210" : "Donation Assistance Desk: +91-98765-43210"}</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 text-xs text-sandstone-200">
+          <div className="bg-maroon-deep/80 p-4 rounded-2xl border border-gold-royal/30 space-y-1">
+            <span className="font-serif font-bold text-cream-ivory block text-sm">प्रत्येक ईंट की गिनती</span>
+            <span className="text-[11px] text-sandstone-300">मंदिर की नींव में आपकी श्रद्धा अमर रहेगी</span>
+          </div>
+          <div className="bg-maroon-deep/80 p-4 rounded-2xl border border-gold-royal/30 space-y-1">
+            <span className="font-serif font-bold text-cream-ivory block text-sm">स्मृति पट्टिका पर अंकन</span>
+            <span className="text-[11px] text-sandstone-300">दानदाताओं के नाम मंदिर प्रांगण में संरक्षित</span>
+          </div>
+          <div className="bg-maroon-deep/80 p-4 rounded-2xl border border-gold-royal/30 space-y-1">
+            <span className="font-serif font-bold text-cream-ivory block text-sm">सामुदायिक सहभागिता</span>
+            <span className="text-[11px] text-sandstone-300">समाज के हर वर्ग के सहयोग से भव्य निर्माण</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Causes Supported */}
-      <div className="bg-white rounded-3xl p-8 border border-sandstone-200 space-y-6">
-        <h2 className="text-2xl font-bold text-maroon-950 font-serif">
-          {isHi ? "आपके दान का सदुपयोग किन प्रकल्पों में होता है?" : "Charitable Projects Supported by Your Offerings"}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-stone-700 text-sm">
-          <div className="space-y-2">
-            <span className="font-bold text-maroon-900 block font-serif text-base">
-              {isHi ? "1. नित्य अन्नक्षेत्र (महाप्रसाद)" : "1. Daily Annakshetra (Free Meals)"}
+      {/* 4. Interactive Online Seva Contribution Portal */}
+      <section className="space-y-4">
+        <div className="text-center space-y-1 max-w-2xl mx-auto">
+          <span className="text-xs font-serif font-bold uppercase tracking-widest text-gold-royal block">
+            {isHi ? "ऑनलाइन सहयोग" : "Online Contribution"}
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-maroon-deep">
+            {isHi ? "डिजिटल माध्यम से सेवा समर्पण" : "Contribute Online"}
+          </h2>
+        </div>
+        <DonationPortal locale={locale} />
+      </section>
+
+      {/* 5. Bank Account Information Section (Preserving Source Placeholders with "जानकारी शीघ्र उपलब्ध होगी") */}
+      <section className="bg-cream-warm rounded-3xl border border-gold-royal/30 p-8 sm:p-10 shadow-sacred-sm space-y-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-gold-royal">
+            <Building2 className="w-5 h-5" />
+            <span className="text-xs font-serif font-bold uppercase tracking-widest">
+              {isHi ? "बैंक खाता विवरण" : "Bank Transfer Details"}
             </span>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              {isHi
-                ? "प्रतिदिन सैकड़ों जरूरतमंदों, साधु-संतों एवं दूर-दराज से आए श्रद्धालुओं को दोनों समय निःशुल्क भोजन प्रसादी।"
-                : "Providing free nutritious sattvic meals daily to hundreds of visiting pilgrims, sadhus, and needy persons."}
-            </p>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-maroon-deep">
+            {isHi ? "ट्रस्ट अधिकृत बैंक विवरण" : "Official Trust Bank Details"}
+          </h3>
+          <p className="text-xs text-stone-600 font-light">
+            {isHi
+              ? "स्रोत सामग्री के अनुसार ट्रस्ट के अधिकृत बैंक खाते की जानकारी निम्नानुसार है। किसी भी अनधिकृत खाते में राशि प्रेषित न करें।"
+              : "Official Trust bank details for direct RTGS/NEFT/IMPS transfer."}
+          </p>
+        </div>
+
+        {/* Transparent Placeholder Status (ZERO FABRICATION) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="bg-cream-ivory p-5 rounded-2xl border border-sandstone-200 space-y-3">
+            <div className="flex justify-between items-center border-b border-sandstone-100 pb-2">
+              <span className="text-stone-500 font-serif font-semibold">खाता संख्या (Account No.):</span>
+              <span className="font-mono text-stone-700 bg-sandstone-100 px-2.5 py-1 rounded text-[11px]">
+                जानकारी शीघ्र उपलब्ध होगी
+              </span>
+            </div>
+            <div className="flex justify-between items-center border-b border-sandstone-100 pb-2">
+              <span className="text-stone-500 font-serif font-semibold">बैंक व खाताधारक का नाम:</span>
+              <span className="font-serif font-bold text-maroon-deep text-[11px]">
+                {siteConfig.organization.nameHi}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-stone-500 font-serif font-semibold">आईएफएससी कोड (IFSC):</span>
+              <span className="font-mono text-stone-700 bg-sandstone-100 px-2.5 py-1 rounded text-[11px]">
+                जानकारी शीघ्र उपलब्ध होगी
+              </span>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <span className="font-bold text-maroon-900 block font-serif text-base">
-              {isHi ? "2. कामधेनु गोशाला संवर्धन" : "2. Kamadhenu Gaushala Care"}
-            </span>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              {isHi
-                ? "देसी गोवंश का संरक्षण, हरा चारा, स्वच्छ जल, शेड निर्माण एवं अनुभवी पशु चिकित्सकों द्वारा नियमित स्वास्थ्य रक्षा।"
-                : "Nurturing indigenous cattle, clean water facilities, modern sheds, and veterinary medical care."}
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <span className="font-bold text-maroon-900 block font-serif text-base">
-              {isHi ? "3. तीर्थयात्री सुविधा एवं चिकित्सा" : "3. Pilgrim Aid & Medical Relief"}
-            </span>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              {isHi
-                ? "सुलभ धर्मशाला विश्राम गृह, 24 घंटे प्राथमिक स्वास्थ्य केंद्र एवं स्वच्छ पेयजल प्याऊ व्यवस्था।"
-                : "Maintaining clean affordable pilgrim dormitories, 24-hour first aid dispensary, and clean drinking water."}
-            </p>
+          <div className="bg-cream-ivory p-5 rounded-2xl border border-sandstone-200 space-y-3">
+            <div className="flex justify-between items-center border-b border-sandstone-100 pb-2">
+              <span className="text-stone-500 font-serif font-semibold">ऑनलाइन भुगतान (UPI):</span>
+              <span className="font-mono text-stone-700 bg-sandstone-100 px-2.5 py-1 rounded text-[11px]">
+                जानकारी शीघ्र उपलब्ध होगी
+              </span>
+            </div>
+            <div className="flex justify-between items-center border-b border-sandstone-100 pb-2">
+              <span className="text-stone-500 font-serif font-semibold">यूपीआई आईडी (UPI ID):</span>
+              <span className="font-mono text-stone-700 bg-sandstone-100 px-2.5 py-1 rounded text-[11px]">
+                जानकारी शीघ्र उपलब्ध होगी
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-stone-500 font-serif font-semibold">क्यू आर कोड (QR Code):</span>
+              <span className="text-stone-600 font-serif text-[11px]">
+                कार्यालय काउंटर पर उपलब्ध
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* Verification Note */}
+        <div className="bg-cream-ivory/80 border border-gold-royal/20 rounded-2xl p-4 flex items-start gap-3 text-xs text-stone-600">
+          <Info className="w-5 h-5 text-gold-royal shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            {isHi
+              ? "दान के संबंध में किसी भी स्पष्टीकरण अथवा रसीद सत्यापन हेतु कृपया ट्रस्ट के अधिकृत फोन नंबर (+91-9530106218 / 19 / 20) अथवा कार्यालय से संपर्क करें।"
+              : "For donation verification or physical receipt assistance, please contact the official Trust helpline (+91-9530106218) or visit the temple office."}
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,23 +1,25 @@
 {
   "site": {
     "name": "Shri Jorawar Dham",
-    "subtitle": "Sacred Pilgrimage & Spiritual Sanctuary of Rajasthan",
+    "subtitle": "Village Chitaura, Tehsil Saipau, District Dholpur (Rajasthan)",
     "mottoHero": "Faith • Strength • Peace",
-    "description": "Shri Jorawar Dham, a sacred pilgrimage nestled in the revered land of Rajasthan, where thousands of devotees gather for darshan, seva, and divine blessings.",
-    "motto": "Truth, Seva, and Devotion"
+    "description": "Siddh Shri Jorawar Dham Seva Samiti, Chitaura (Dholpur) - The sacred sanctuary of Bhagwan Jorawar Ji Maharaj.",
+    "motto": "Om Jorawar Paramatmane Namah"
   },
   "nav": {
     "home": "Home",
-    "about": "About Dham",
-    "history": "Sacred History",
+    "about": "About Us",
+    "history": "History",
+    "attractions": "Main Attractions",
     "bhagwanJorawar": "Bhagwan Jorawar",
-    "dham": "Dham Guide",
+    "dham": "Sanctuary",
     "darshan": "Darshan",
     "aarti": "Maha Aarti",
     "seva": "Pooja & Seva",
-    "events": "Festivals & Events",
-    "gallery": "Sacred Gallery",
+    "events": "Events & Melas",
+    "gallery": "Gallery",
     "donation": "Donation",
+    "howToReach": "How to Reach",
     "visitorInfo": "Visitor Info",
     "contact": "Contact",
     "faq": "FAQ",
@@ -25,61 +27,64 @@
     "language": "Language"
   },
   "hero": {
-    "badge": "Revered Pilgrimage Shrine of Rajasthan",
-    "motto": "Faith • Strength • Peace",
-    "title": "Divine Darshan of Shri Jorawar Dham",
-    "subtitle": "The holy sanctuary of Param Pujya Jorawar Ji Maharaj, where devotion unites hearts. Find daily darshan schedules, aarti timings, and official announcements.",
-    "ctaDarshan": "Today's Darshan Timings",
-    "ctaHistory": "Explore Sacred History",
-    "emergencyNotice": "Important Notice: Entry into the temple sanctum is completely free. Please do not offer payments or tips to unauthorized persons."
+    "badge": "Chitaura, Tehsil Saipau, Dholpur (Raj.)",
+    "motto": "Om Jorawar Paramatmane Namah",
+    "title": "Welcome to Shri Jorawar Dham",
+    "subtitle": "The sacred ground of Param Pujya Bhagwan Jorawar Ji Maharaj — faith, spiritual strength, and tranquility.",
+    "ctaDarshan": "Divine Darshan Timings",
+    "ctaHistory": "Dham History",
+    "emergencyNotice": "Public darshan and entry into Shri Jorawar Dham is strictly complimentary for all pilgrims."
   },
   "timings": {
-    "title": "Daily Darshan & Maha Aarti Timings",
-    "subtitle": "The temple doors welcome devotees throughout the holy day",
-    "mangalaAarti": "Mangala Aarti",
-    "shringarAarti": "Shringar Aarti",
-    "bhogAarti": "Rajbhog Aarti",
-    "sandhyaAarti": "Sandhya Maha Aarti",
-    "shayanAarti": "Shayan Aarti",
-    "openStatus": "Temple is Currently Open for Devotees",
-    "closedStatus": "Resting Hours - Doors Temporarily Closed",
-    "guidelinesNotice": "Devotees are requested to assemble in line 15 minutes before Aarti"
+    "title": "Divine Darshan Schedule",
+    "subtitle": "Daily Timings at Siddh Shri Jorawar Dham",
+    "mangalaAarti": "Mangala Darshan",
+    "shringarAarti": "Morning Darshan",
+    "bhogAarti": "Bhog Darshan",
+    "sandhyaAarti": "Gwal Darshan",
+    "shayanAarti": "Night Darshan",
+    "openStatus": "Temple Sanctum is Open for Darshan",
+    "closedStatus": "Sanctum Closed for Rest",
+    "guidelinesNotice": "Please observe silence and temple guidelines"
   },
   "notices": {
-    "liveTitle": "Live Announcements & Official Notices",
+    "liveTitle": "Latest Announcements & Notices",
     "viewAll": "View All Notices",
-    "urgent": "Urgent Advisory",
-    "pinned": "Pinned Notice",
+    "urgent": "URGENT",
+    "pinned": "Pinned",
     "publishedOn": "Published",
-    "noNotices": "No new announcements at this time."
+    "noNotices": "No new notices available at this time."
   },
   "events": {
     "title": "Upcoming Festivals & Religious Melas",
-    "subtitle": "Celebrations and devotional gatherings observed throughout the year",
+    "subtitle": "Celebrated with devotion throughout the year",
     "viewDetails": "View Details",
-    "viewAll": "View All Festivals",
+    "viewAll": "All Events",
     "dates": "Date",
-    "location": "Venue"
+    "location": "Location"
   },
   "gallery": {
-    "title": "Sacred Photo Gallery",
-    "subtitle": "Visual journey through Shri Jorawar Dham, deities, sanctum, and divine festivals",
-    "all": "All Photos",
-    "sanctum": "Sanctum & Deities",
+    "title": "Sacred Visual Gallery",
+    "subtitle": "Glimpses of Shri Jorawar Dham sanctum and festivals",
+    "all": "All",
+    "sanctum": "Sanctum",
     "festivals": "Festivals",
-    "premises": "Dham Premises",
-    "seva": "Seva & Bhandara"
+    "premises": "Premises",
+    "seva": "Seva"
   },
   "footer": {
-    "trustName": "Siddh Shri Jorawar Dham Seva Samiti (Reg. No. COOP/2023/DHOLPUR/201054)",
-    "address": "Shri Jorawar Dham, Churu District, Rajasthan, India",
-    "quickLinks": "Quick Navigation",
+    "trustName": "Siddh Shri Jorawar Dham Seva Samiti",
+    "registration": "Reg. No. COOP/2023/DHOLPUR/201054",
+    "address": "Village & Post Chitaura, Tehsil Saipau, District Dholpur, Rajasthan - 328027",
+    "phone": "+91-9530106218, +91-9530106219, +91-9530106220",
+    "email": "info@jorawardham.in",
+    "quickLinks": "Quick Links",
     "importantLinks": "Important Links",
     "darshanTimings": "Darshan Timings",
-    "emergencyContact": "Emergency Helpline",
-    "copyright": "All rights reserved. Shri Jorawar Dham Trust.",
+    "emergencyContact": "Helpline",
+    "copyright": "All Rights Reserved. Siddh Shri Jorawar Dham Seva Samiti.",
     "privacy": "Privacy Policy",
-    "terms": "Terms & Conditions"
+    "terms": "Terms of Service"
   },
   "common": {
     "readMore": "Read More",
@@ -90,6 +95,6 @@
     "today": "Today",
     "status": "Status",
     "search": "Search",
-    "languageSwitched": "Language changed to English"
+    "languageSwitched": "Language switched to English"
   }
 }

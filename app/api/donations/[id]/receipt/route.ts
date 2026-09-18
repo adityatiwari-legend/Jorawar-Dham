@@ -10,6 +10,12 @@ export async function GET(
   try {
     const { id } = await params;
 
+    // If accessed directly from a browser, redirect to the formatted digital receipt page
+    const acceptHeader = req.headers.get("accept") || "";
+    if (acceptHeader.includes("text/html")) {
+      return NextResponse.redirect(new URL(`/hi/donation/receipt/${id}`, req.url), 307);
+    }
+
     const donation = await prisma.donation.findUnique({
       where: { id },
       include: { cause: true },

@@ -878,7 +878,7 @@ export default function AdminBookingsPage() {
                     <span className="font-mono text-emerald-900 font-bold">{selectedBooking.receiptNumber}</span>
                   </div>
                   <a
-                    href={`/api/bookings/${selectedBooking.id}/receipt`}
+                    href={`/hi/user/bookings/${selectedBooking.id}/invoice`}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-1 text-emerald-800 underline font-semibold"

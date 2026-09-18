@@ -276,7 +276,7 @@ export default function DonationPortal({ locale }: { locale: string }) {
 
             <div className="flex items-center justify-center gap-3 pt-2">
               <a
-                href={`/api/donations/${successReceipt.donationId}/receipt`}
+                href={`/${locale}/donation/receipt/${successReceipt.donationId}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-emerald-800 text-white font-bold rounded-xl text-xs hover:bg-emerald-900 shadow-md transition"

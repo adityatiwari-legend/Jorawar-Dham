@@ -14,6 +14,12 @@ export async function GET(
 
     const { id } = await params;
 
+    // If accessed directly from a browser, redirect to the formatted invoice page
+    const acceptHeader = req.headers.get("accept") || "";
+    if (acceptHeader.includes("text/html")) {
+      return NextResponse.redirect(new URL(`/hi/user/bookings/${id}/invoice`, req.url), 307);
+    }
+
     const receipt = await prisma.receipt.findFirst({
       where: { bookingId: id },
       include: {

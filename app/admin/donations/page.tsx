@@ -342,7 +342,7 @@ export default function AdminDonationsPage() {
                         <td className="py-3.5 px-4">
                           {d.receiptNumber ? (
                             <a
-                              href={`/api/donations/${d.id}/receipt`}
+                              href={`/hi/donation/receipt/${d.id}`}
                               target="_blank"
                               rel="noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-rose-700 underline font-semibold"

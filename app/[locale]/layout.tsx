@@ -17,7 +17,7 @@ export async function generateMetadata({
   if (!isValidLocale(locale)) return {};
 
   const dict = getDictionary(locale);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jorawardham.org";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://jorawar.adityatiwaridev.xyz";
 
   return {
     metadataBase: new URL(baseUrl),

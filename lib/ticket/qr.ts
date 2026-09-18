@@ -11,7 +11,8 @@ export async function generateBookingQrDataUri(
   bookingReference: string,
   qrSecurityToken: string
 ): Promise<string> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jorawardham.org";
+  const rawBase = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://jorawar.adityatiwaridev.xyz";
+  const baseUrl = rawBase.replace(/\/$/, "");
   // Secure opaque verification URL
   const verificationPayload = `${baseUrl}/ticket/verify?ref=${encodeURIComponent(
     bookingReference

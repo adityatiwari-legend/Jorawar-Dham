@@ -6,7 +6,7 @@ interface JsonLdProps {
 
 export default function JsonLd({ locale }: JsonLdProps) {
   const isHi = locale === "hi";
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://jorawardham.org";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://jorawar.adityatiwaridev.xyz";
 
   const templeSchema = {
     "@context": "https://schema.org",

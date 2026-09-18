@@ -94,7 +94,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <div lang={locale} className="min-h-screen flex flex-col">
+    <div lang={locale} className="min-h-screen flex flex-col overflow-x-hidden max-w-full w-full">
       <JsonLd locale={locale} />
       <Navbar locale={locale} />
       <main className="flex-1">{children}</main>

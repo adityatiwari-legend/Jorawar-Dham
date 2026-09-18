@@ -13,7 +13,7 @@ export default function Footer({ locale }: FooterProps) {
   const isHi = locale === "hi";
 
   return (
-    <footer className="bg-maroon-deep text-cream-ivory border-t-2 border-gold-royal/40 mt-auto pb-16 lg:pb-0">
+    <footer className="bg-maroon-deep text-cream-ivory border-t-2 border-gold-royal/40 mt-auto pb-16 lg:pb-0 overflow-hidden w-full max-w-full">
       {/* 1. Official Mantra Arch Strip */}
       <div className="bg-maroon-primary/60 py-3 px-4 text-center border-b border-gold-royal/20">
         <p className="text-gold-royal font-serif text-xs sm:text-sm tracking-widest uppercase font-bold">

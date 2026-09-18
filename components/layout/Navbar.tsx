@@ -222,18 +222,27 @@ export default function Navbar({ locale }: NavbarProps) {
             </div>
           </nav>
 
-          {/* Right Controls: Language Switcher, Devotee CTA, Mobile Hamburger */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Right Controls: Language Switcher, Book Darshan CTA, Devotee Portal, Mobile Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <Suspense fallback={<div className="w-16 h-7 bg-stone-200/50 rounded-lg animate-pulse" />}>
               <LanguageSwitcher currentLocale={locale} />
             </Suspense>
 
             <Link
-              href={`/${locale}/auth/login`}
-              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-maroon-deep bg-gradient-to-r from-gold-soft to-gold-royal hover:from-gold-royal hover:to-gold-soft shadow-sm hover:shadow-sacred-sm transition-all subtle-lift border border-gold-royal/30"
+              href={`/${locale}/booking`}
+              id="nav-book-darshan-cta"
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold text-maroon-deep bg-gradient-to-r from-gold-soft to-gold-royal hover:from-gold-royal hover:to-gold-soft shadow-sm hover:shadow-sacred-sm transition-all subtle-lift border border-gold-royal/30 shrink-0"
             >
-              <Sparkles className="w-3.5 h-3.5 text-maroon-deep" />
-              <span>{isHi ? "श्रद्धालु सेवा" : "Devotee Portal"}</span>
+              <Calendar className="w-3.5 h-3.5 text-maroon-deep" />
+              <span>{isHi ? "दर्शन बुक करें" : "Book Darshan"}</span>
+            </Link>
+
+            <Link
+              href={`/${locale}/user`}
+              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:text-maroon-primary bg-sandstone-100 hover:bg-sandstone-200/80 transition-all border border-sandstone-200"
+            >
+              <User className="w-3.5 h-3.5 text-maroon-primary" />
+              <span>{isHi ? "श्रद्धालु पोर्टल" : "Devotee Portal"}</span>
             </Link>
 
             <button
@@ -270,14 +279,25 @@ export default function Navbar({ locale }: NavbarProps) {
             </div>
           </div>
 
-          <Link
-            href={`/${locale}/auth/login`}
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-center gap-2 w-full min-h-[44px] px-4 py-2.5 rounded-xl text-xs font-bold bg-maroon-deep text-cream-ivory shadow-sm text-center border border-gold-royal/30"
-          >
-            <User className="w-4 h-4 text-gold-soft" />
-            <span>{isHi ? "श्रद्धालु लॉगिन / पंजीकरण" : "Devotee Portal Sign In"}</span>
-          </Link>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href={`/${locale}/booking`}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-1.5 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-gold-soft to-gold-royal text-maroon-deep shadow-sm text-center border border-gold-royal/30"
+            >
+              <Calendar className="w-4 h-4 text-maroon-deep" />
+              <span>{isHi ? "दर्शन बुक करें" : "Book Darshan"}</span>
+            </Link>
+
+            <Link
+              href={`/${locale}/user`}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-1.5 min-h-[44px] px-3 py-2.5 rounded-xl text-xs font-bold bg-maroon-deep text-cream-ivory shadow-sm text-center border border-gold-royal/30"
+            >
+              <User className="w-4 h-4 text-gold-soft" />
+              <span>{isHi ? "श्रद्धालु पोर्टल" : "Devotee Portal"}</span>
+            </Link>
+          </div>
 
           <div className="pt-1 space-y-1">
             {allNavLinks.map((link) => {

@@ -71,23 +71,32 @@ export default function DevotionalHero({ locale }: DevotionalHeroProps) {
         {/* Reusable Sacred Ornamental Divider */}
         <SacredDivider variant="gold" className="my-2" />
 
-        {/* Dual Primary Call-to-Action Buttons */}
+        {/* Primary Call-to-Action Buttons with Prominent Book Darshan CTA */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+          <Link
+            href={`/${locale}/booking`}
+            id="hero-book-darshan-cta"
+            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-gold-soft via-gold-royal to-gold-soft hover:from-gold-royal hover:to-gold-soft text-maroon-deep font-serif font-bold px-8 py-3 rounded-xl shadow-gold-glow hover:shadow-sacred-lg transition-all subtle-lift text-sm sm:text-base border-2 border-amber-300 ring-2 ring-gold-royal/30"
+          >
+            <Sparkles className="w-5 h-5 text-maroon-deep animate-pulse" />
+            <span>{isHi ? "दर्शन बुक करें" : "Book Darshan"}</span>
+            <ArrowRight className="w-4 h-4 text-maroon-deep" />
+          </Link>
+
           <a
             href="#darshan-timings"
-            className="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 bg-gradient-to-r from-gold-soft to-gold-royal hover:from-gold-royal hover:to-gold-soft text-maroon-deep font-serif font-bold px-7 py-3 rounded-xl shadow-sacred-md hover:shadow-gold-glow transition-all subtle-lift text-sm border border-gold-royal/40"
+            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 bg-maroon-primary/90 hover:bg-maroon-wine text-cream-ivory font-serif font-semibold px-6 py-3 rounded-xl border border-gold-royal/40 backdrop-blur-md transition-all subtle-lift text-sm shadow-sacred-sm"
           >
-            <Calendar className="w-4 h-4 text-maroon-deep" />
-            <span>{isHi ? "दिव्य दर्शन समय देखें" : "View Darshan Timings"}</span>
+            <Calendar className="w-4 h-4 text-gold-soft" />
+            <span>{isHi ? "दर्शन समय देखें" : "View Timings"}</span>
           </a>
 
           <Link
             href={`/${locale}/about`}
-            className="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 bg-maroon-primary/80 hover:bg-maroon-wine text-cream-ivory font-serif font-semibold px-7 py-3 rounded-xl border border-gold-royal/40 backdrop-blur-md transition-all subtle-lift text-sm shadow-sacred-sm"
+            className="hidden md:inline-flex w-full sm:w-auto min-h-[48px] items-center justify-center gap-2 bg-maroon-deep/80 hover:bg-maroon-primary text-sandstone-200 hover:text-cream-ivory font-serif font-medium px-5 py-3 rounded-xl border border-gold-royal/30 backdrop-blur-md transition-all text-sm"
           >
             <BookOpen className="w-4 h-4 text-gold-soft" />
-            <span>{isHi ? "धाम का पावन इतिहास" : "Dham History"}</span>
-            <ArrowRight className="w-4 h-4 text-gold-soft" />
+            <span>{isHi ? "पावन इतिहास" : "History"}</span>
           </Link>
         </div>
 

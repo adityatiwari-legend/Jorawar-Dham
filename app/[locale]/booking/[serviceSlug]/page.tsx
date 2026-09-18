@@ -19,6 +19,8 @@ import {
   User,
   Phone,
   ArrowLeft,
+  QrCode,
+  FileText,
 } from "lucide-react";
 import { Locale } from "@/lib/utils/i18n";
 import SacredDivider from "@/components/public/SacredDivider";
@@ -73,8 +75,27 @@ export default function BookingWizardPage({
   const [bookingResult, setBookingResult] = useState<any>(null);
   const [qrDataUri, setQrDataUri] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [availabilityMap, setAvailabilityMap] = useState<Record<string, { status: string; remainingSeats: number; reason?: string }>>({});
 
-  // 1. Fetch slots when date or serviceSlug changes
+  // 1. Fetch 30-day date availability on load
+  useEffect(() => {
+    async function loadAvailability() {
+      try {
+        const res = await fetch(`/api/services/${serviceSlug}/availability?days=30`);
+        const data = await res.json();
+        if (data.success && data.dates) {
+          const map: Record<string, { status: string; remainingSeats: number; reason?: string }> = {};
+          data.dates.forEach((d: any) => {
+            map[d.date] = { status: d.status, remainingSeats: d.remainingSeats, reason: d.reason };
+          });
+          setAvailabilityMap(map);
+        }
+      } catch {}
+    }
+    loadAvailability();
+  }, [serviceSlug]);
+
+  // 2. Fetch slots when date or serviceSlug changes
   useEffect(() => {
     async function loadSlots() {
       setLoading(true);
@@ -303,11 +324,11 @@ export default function BookingWizardPage({
       {/* 1. Header & Stepper */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <Link
-          href={`/${locale}/seva`}
+          href={`/${locale}/booking`}
           className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-maroon-deep transition-colors font-serif"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>{isHi ? "वापस सेवा सूची पर जाएं" : "Back to Seva Offerings"}</span>
+          <span>{isHi ? "← चरण 01: अन्य सेवा चुनें (Change Service)" : "← Step 01: Change Service"}</span>
         </Link>
         <h1 className="text-2xl sm:text-3xl font-serif font-bold text-maroon-deep">
           {service ? (isHi ? service.titleHi : service.titleEn) : isHi ? "दर्शन एवं सेवा बुकिंग" : "Pilgrim Reservation"}
@@ -385,18 +406,27 @@ export default function BookingWizardPage({
                     </span>
                   </div>
 
-                  {/* Horizontal Quick Date Cards */}
+                  {/* Horizontal Quick Date Cards with Live Availability Badges */}
                   <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
                     {upcomingDates.map((item) => {
                       const isSelected = selectedDate === item.iso;
+                      const avail = availabilityMap[item.iso];
+                      const isFull = avail?.status === "FULL";
+                      const isClosed = avail?.status === "CLOSED";
+                      const isLimited = avail?.status === "LIMITED";
+                      const isDisabled = isFull || isClosed;
+
                       return (
                         <button
                           key={item.iso}
                           type="button"
+                          disabled={isDisabled}
                           onClick={() => setSelectedDate(item.iso)}
-                          className={`p-2.5 rounded-2xl border text-center transition-all subtle-lift flex flex-col items-center justify-center ${
+                          className={`p-2 rounded-2xl border text-center transition-all subtle-lift flex flex-col items-center justify-between min-h-[90px] relative ${
                             isSelected
                               ? "bg-maroon-deep text-cream-ivory border-gold-royal ring-2 ring-gold-royal/40 shadow-sacred-sm"
+                              : isDisabled
+                              ? "bg-stone-100 text-stone-400 border-stone-200 cursor-not-allowed opacity-60"
                               : "bg-cream-warm hover:bg-sandstone-200 border-sandstone-200 text-stone-800"
                           }`}
                         >
@@ -409,6 +439,27 @@ export default function BookingWizardPage({
                           <span className="text-[9px] opacity-75">
                             {item.monthName}
                           </span>
+
+                          {/* Availability Badge */}
+                          <div className="mt-1">
+                            {isClosed ? (
+                              <span className="text-[8px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded-full font-bold">
+                                {isHi ? "अवरुद्ध" : "Closed"}
+                              </span>
+                            ) : isFull ? (
+                              <span className="text-[8px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-bold">
+                                {isHi ? "पूर्ण" : "Full"}
+                              </span>
+                            ) : isLimited ? (
+                              <span className="text-[8px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full font-bold">
+                                {isHi ? "सीमित" : "Limited"}
+                              </span>
+                            ) : (
+                              <span className="text-[8px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-bold">
+                                {isHi ? "उपलब्ध" : "Open"}
+                              </span>
+                            )}
+                          </div>
                         </button>
                       );
                     })}
@@ -811,14 +862,38 @@ export default function BookingWizardPage({
             </div>
           </div>
 
-          {/* Action Links */}
-          <div className="flex flex-wrap justify-center gap-4 pt-2">
+          {/* Action Links: View Ticket, Download Invoice, View Booking */}
+          <div className="flex flex-wrap justify-center gap-3 pt-2">
             <Link
-              href={`/${locale}/devotee/dashboard`}
-              className="min-h-[44px] inline-flex items-center gap-2 bg-maroon-deep hover:bg-maroon-primary text-cream-ivory px-7 py-3 rounded-xl font-serif font-bold text-xs sm:text-sm shadow-sacred-sm transition-colors border border-gold-royal/40"
+              href={`/${locale}/user/bookings/${bookingResult.id}/ticket`}
+              className="min-h-[44px] inline-flex items-center gap-2 bg-gradient-to-r from-gold-soft to-gold-royal hover:from-gold-royal hover:to-gold-soft text-maroon-deep px-5 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm shadow-sacred-sm transition-all border border-gold-royal/40"
             >
-              <span>{isHi ? "मेरे टिकट्स व डैशबोर्ड" : "My Bookings Dashboard"}</span>
-              <ArrowRight className="w-4 h-4 text-gold-soft" />
+              <QrCode className="w-4 h-4 text-maroon-deep" />
+              <span>{isHi ? "डिजिटल पास देखें" : "View Ticket"}</span>
+            </Link>
+
+            <Link
+              href={`/${locale}/user/bookings/${bookingResult.id}/invoice`}
+              className="min-h-[44px] inline-flex items-center gap-2 bg-maroon-deep hover:bg-maroon-primary text-cream-ivory px-5 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm shadow-sacred-sm transition-colors border border-gold-royal/40"
+            >
+              <Download className="w-4 h-4 text-gold-soft" />
+              <span>{isHi ? "रसीद डाउनलोड करें" : "Download Invoice"}</span>
+            </Link>
+
+            <Link
+              href={`/${locale}/user/bookings/${bookingResult.id}`}
+              className="min-h-[44px] inline-flex items-center gap-2 bg-cream-warm hover:bg-sandstone-200 text-stone-800 px-5 py-2.5 rounded-xl font-serif font-semibold text-xs sm:text-sm shadow-sm transition-colors border border-sandstone-300"
+            >
+              <FileText className="w-4 h-4 text-maroon-deep" />
+              <span>{isHi ? "बुकिंग विवरण" : "View Booking"}</span>
+            </Link>
+
+            <Link
+              href={`/${locale}/user/bookings`}
+              className="min-h-[44px] inline-flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-stone-700 px-4 py-2.5 rounded-xl font-serif font-medium text-xs sm:text-sm transition-colors"
+            >
+              <span>{isHi ? "मेरी बुकिंग्स" : "My Bookings"}</span>
+              <ArrowRight className="w-4 h-4 text-stone-500" />
             </Link>
           </div>
         </div>

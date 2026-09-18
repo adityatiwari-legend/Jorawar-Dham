@@ -15,8 +15,8 @@ export default function MobileQuickBar({ locale }: MobileQuickBarProps) {
 
   const quickActions = [
     {
-      href: `/${locale}/darshan`,
-      label: isHi ? "दर्शन" : "Darshan",
+      href: `/${locale}/booking`,
+      label: isHi ? "दर्शन बुकिंग" : "Book",
       icon: Clock,
     },
     {

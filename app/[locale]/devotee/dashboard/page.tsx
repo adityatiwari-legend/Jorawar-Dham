@@ -60,32 +60,10 @@ export default function DevoteeDashboardPage({
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
-    async function loadDevoteeData() {
-      setLoading(true);
-      try {
-        const [meRes, bookingsRes] = await Promise.all([
-          fetch("/api/auth/devotee/me"),
-          fetch("/api/bookings"),
-        ]);
-
-        if (meRes.status === 401) {
-          router.push(`/${locale}/auth/login?redirect=/${locale}/devotee/dashboard`);
-          return;
-        }
-
-        const meData = await meRes.json();
-        const bookingsData = await bookingsRes.json();
-
-        if (meData.success) setDevotee(meData.user);
-        if (bookingsData.success) setBookings(bookingsData.bookings);
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadDevoteeData();
+    router.replace(`/${locale}/user`);
   }, [locale, router]);
+
+
 
   const handleLogout = async () => {
     await fetch("/api/auth/devotee/logout", { method: "POST" });

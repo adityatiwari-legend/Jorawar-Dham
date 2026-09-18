@@ -23,6 +23,8 @@ import {
   Heart,
   BarChart3,
   Users,
+  Sparkles,
+  UserCheck,
 } from "lucide-react";
 
 interface AdminProfile {
@@ -77,13 +79,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/admin/bookings", label: "Bookings & Passes", icon: Ticket },
+    { href: "/admin/services", label: "Services & Darshan", icon: Sparkles },
     { href: "/admin/slots", label: "Slots & Capacity", icon: Clock },
+    { href: "/admin/bookings", label: "Bookings & Passes", icon: Ticket },
+    { href: "/admin/invoices", label: "Invoices & Receipts", icon: FileText },
     { href: "/admin/payments", label: "Payments Ledger", icon: CreditCard },
     { href: "/admin/donations", label: "Donations & Causes", icon: Heart },
+    { href: "/admin/devotees", label: "Devotees Directory", icon: UserCheck },
     { href: "/admin/scanner", label: "Entrance Scanner", icon: QrCode },
     { href: "/admin/reports", label: "Reports & Analytics", icon: BarChart3 },
-    { href: "/admin/users", label: "User Management", icon: Users },
+    { href: "/admin/users", label: "Admin Users & RBAC", icon: Users },
     { href: "/admin/notices", label: "Notices & Alerts", icon: Bell },
     { href: "/admin/events", label: "Events & Festivals", icon: Calendar },
     { href: "/admin/content/pages", label: "Dynamic Pages", icon: FileText },

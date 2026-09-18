@@ -113,6 +113,7 @@ export async function POST(req: NextRequest) {
         amountInPaise: order.amountInPaise,
         currency: order.currency,
         keyId: order.keyId,
+        isMock: order.isMock,
         bookingReference: booking.bookingReference,
       },
     });

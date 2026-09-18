@@ -13,6 +13,7 @@ export interface CreateOrderResult {
   amountInPaise: number;
   currency: string;
   keyId: string;
+  isMock: boolean;
 }
 
 export interface VerifySignatureParams {
@@ -82,6 +83,7 @@ class RazorpayGatewayProvider implements PaymentGatewayProvider {
       amountInPaise: data.amount,
       currency: data.currency,
       keyId: this.keyId,
+      isMock: false,
     };
   }
 
@@ -160,6 +162,7 @@ export class MockGatewayProvider implements PaymentGatewayProvider {
       amountInPaise: params.amountInPaise,
       currency: params.currency || "INR",
       keyId: "rzp_mock_test_key_jorawardham",
+      isMock: true,
     };
   }
 
@@ -203,9 +206,33 @@ export class MockGatewayProvider implements PaymentGatewayProvider {
  * Get active payment gateway provider based on environment
  */
 export function getPaymentGateway(): PaymentGatewayProvider {
-  const providerType = process.env.PAYMENT_GATEWAY_PROVIDER || "mock";
-  if (providerType.toLowerCase() === "razorpay" && process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  const providerType = (process.env.PAYMENT_GATEWAY_PROVIDER || "").trim().toLowerCase();
+
+  // Explicitly forced mock mode for automated test suites
+  if (providerType === "mock") {
+    return new MockGatewayProvider();
+  }
+
+  const keyId = (process.env.RAZORPAY_KEY_ID || "").trim();
+  const keySecret = (process.env.RAZORPAY_KEY_SECRET || "").trim();
+
+  // Detect valid Razorpay key formats (rzp_test_... or rzp_live_...) with non-placeholder secret
+  const hasValidRazorpayKeys =
+    (keyId.startsWith("rzp_test_") || keyId.startsWith("rzp_live_")) &&
+    keySecret.length >= 8 &&
+    !keySecret.includes("placeholder");
+
+  if (providerType === "razorpay" || hasValidRazorpayKeys) {
+    if (!hasValidRazorpayKeys) {
+      logger.error(
+        "PAYMENT_GATEWAY_PROVIDER is set to 'razorpay' but RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET is missing or contains placeholder values. Check .env."
+      );
+      throw new Error(
+        "Razorpay credentials missing or invalid in environment. Refusing to initialize gateway with placeholder credentials."
+      );
+    }
     return new RazorpayGatewayProvider();
   }
+
   return new MockGatewayProvider();
 }

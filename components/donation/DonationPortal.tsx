@@ -119,26 +119,62 @@ export default function DonationPortal({ locale }: { locale: string }) {
         throw new Error(data.error || (isHi ? "दान आदेश निर्माण में त्रुटि" : "Failed to initiate donation"));
       }
 
-      const { donationId, gatewayOrderId, keyId, amountInPaise, donationReference } = data;
+      const { donationId, gatewayOrderId, keyId, amountInPaise, isMock, donationReference } = data;
 
-      // 2. Open Razorpay modal if SDK loaded, or execute mock checkout for local dev/testing
+      // 2. Safe Gateway Handling:
+      // If mock mode is active, NEVER invoke real Razorpay checkout.js (which would contact api.razorpay.com and trigger a 401 Basic Auth popup).
+      if (isMock || !keyId || keyId.startsWith("rzp_mock_") || keyId.includes("placeholder")) {
+        const verifyRes = await fetch("/api/donations/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            donationId,
+            orderId: gatewayOrderId,
+            paymentId: `pay_mock_${Date.now()}`,
+            signature: "mock_signature_dev",
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (verifyData.success) {
+          setSuccessReceipt({
+            receiptNumber: verifyData.receiptNumber,
+            donationReference,
+            amountInRupees: amount,
+            causeTitle: selectedCause ? selectedCause.titleHi : "सामान्य सेवा",
+            donationId,
+          });
+        } else {
+          setError(verifyData.error || (isHi ? "भुगतान सत्यापन असफल" : "Payment verification failed"));
+        }
+        setLoading(false);
+        return;
+      }
+
+      // 3. Official Razorpay Checkout Flow (Live / Test Mode)
+      if (typeof window === "undefined" || !(window as any).Razorpay) {
+        throw new Error(
+          isHi
+            ? "रेज़रपे भुगतान गेटवे लोड नहीं हो सका। कृपया पृष्ठ को पुनः लोड करें।"
+            : "Razorpay Checkout failed to initialize. Please refresh the page."
+        );
+      }
+
       const options = {
-        key: keyId || "rzp_test_placeholder",
+        key: keyId,
         amount: amountInPaise,
         currency: "INR",
-        name: isHi ? "श्री जोरावर धाम तीर्थ ट्रस्ट" : "Shri Jorawar Dham Pilgrimage Trust",
+        name: isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti",
         description: selectedCause ? (isHi ? selectedCause.titleHi : selectedCause.titleEn) : "Dham Seva",
         order_id: gatewayOrderId,
         prefill: {
           name: donorName,
           contact: donorPhone,
-          email: donorEmail,
+          email: donorEmail || undefined,
         },
         theme: {
           color: "#881337",
         },
         handler: async function (response: any) {
-          // 3. Server-side verification
           try {
             const verifyRes = await fetch("/api/donations/verify", {
               method: "POST",
@@ -146,8 +182,8 @@ export default function DonationPortal({ locale }: { locale: string }) {
               body: JSON.stringify({
                 donationId,
                 orderId: response.razorpay_order_id || gatewayOrderId,
-                paymentId: response.razorpay_payment_id || `pay_mock_${Date.now()}`,
-                signature: response.razorpay_signature || "mock_signature_dev",
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
               }),
             });
 
@@ -176,32 +212,12 @@ export default function DonationPortal({ locale }: { locale: string }) {
         },
       };
 
-      if (typeof window !== "undefined" && (window as any).Razorpay) {
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
-      } else {
-        // Fallback for test / development mode: auto-verify with server
-        const verifyRes = await fetch("/api/donations/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            donationId,
-            orderId: gatewayOrderId,
-            paymentId: `pay_mock_${Date.now()}`,
-            signature: "mock_signature_dev",
-          }),
-        });
-        const verifyData = await verifyRes.json();
-        if (verifyData.success) {
-          setSuccessReceipt({
-            receiptNumber: verifyData.receiptNumber,
-            donationReference,
-            amountInRupees: amount,
-            causeTitle: selectedCause ? selectedCause.titleHi : "सामान्य सेवा",
-            donationId,
-          });
-        }
-      }
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (failResp: any) {
+        setError(failResp.error?.description || (isHi ? "भुगतान असफल रहा" : "Payment failed"));
+        setLoading(false);
+      });
+      rzp.open();
     } catch (err: any) {
       setError(err.message || (isHi ? "भुगतान प्रक्रिया में त्रुटि" : "Payment processing error"));
     } finally {

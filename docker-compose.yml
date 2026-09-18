@@ -10,6 +10,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     expose:
       - "5432"
+    ports:
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backups:/backups
@@ -43,6 +45,7 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-6a457c13fbe71eddb8f417a5f73c215c5f08825da2db3d7781d7209921e20702}
       CRON_SECRET: ${CRON_SECRET:-a1e9068c7469a4debe56e1205dfae30b91bb8b811d898aea}
       OTP_SECRET_PEPPER: ${OTP_SECRET_PEPPER:-bee4f696d6de9d3ea2da3c8af2ed95b3e37bdc1293b1e895f1443bacd41f6330}
+      PAYMENT_GATEWAY_PROVIDER: ${PAYMENT_GATEWAY_PROVIDER:-razorpay}
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-rzp_test_placeholder}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-rzp_test_secret_placeholder}
       RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-74469844307c75546e0ed178e32bf325b01bd9f0661a2fce}

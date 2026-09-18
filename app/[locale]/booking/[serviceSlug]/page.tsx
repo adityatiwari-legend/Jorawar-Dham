@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import {
   Calendar,
   Clock,
@@ -173,31 +174,100 @@ export default function BookingWizardPage({
         return;
       }
 
-      // Verification trigger
-      const mockPaymentId = `pay_mock_${Date.now()}`;
-      const verifyRes = await fetch("/api/payments/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookingId: bookingResult.id,
-          razorpayOrderId: orderData.orderId,
-          razorpayPaymentId: mockPaymentId,
-          razorpaySignature: "mock_signature_verified",
-        }),
-      });
+      const { order } = orderData;
 
-      const verifyData = await verifyRes.json();
-      if (!verifyRes.ok || !verifyData.success) {
-        setError(verifyData.error || "भुगतान सत्यापन विफल");
+      // 1. Safe Mock Gateway Handling:
+      // If mock mode is active, NEVER invoke real Razorpay checkout.js (prevents 401 Basic Auth popup on api.razorpay.com)
+      if (order.isMock || !order.keyId || order.keyId.startsWith("rzp_mock_") || order.keyId.includes("placeholder")) {
+        const mockPaymentId = `pay_mock_${Date.now()}`;
+        const verifyRes = await fetch("/api/payments/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: bookingResult.id,
+            orderId: order.orderId,
+            paymentId: mockPaymentId,
+            signature: "mock_signature_verified",
+          }),
+        });
+
+        const verifyData = await verifyRes.json();
+        if (!verifyRes.ok || !verifyData.success) {
+          setError(verifyData.error || "भुगतान सत्यापन विफल");
+          setActionLoading(false);
+          return;
+        }
+
+        await loadConfirmedTicket(bookingResult.id);
+        setStep(4);
         setActionLoading(false);
         return;
       }
 
-      await loadConfirmedTicket(bookingResult.id);
-      setStep(4);
-    } catch {
-      setError("भुगतान प्रक्रिया में त्रुटि");
-    } finally {
+      // 2. Official Razorpay Checkout Flow (Live / Test Mode)
+      if (typeof window === "undefined" || !(window as any).Razorpay) {
+        throw new Error(
+          isHi
+            ? "रेज़रपे भुगतान गेटवे लोड नहीं हो सका। कृपया पृष्ठ को पुनः लोड करें।"
+            : "Razorpay Checkout failed to initialize. Please refresh the page."
+        );
+      }
+
+      const options = {
+        key: order.keyId,
+        amount: order.amountInPaise,
+        currency: order.currency || "INR",
+        name: isHi ? "सिद्ध श्री जोरावर धाम सेवा समिति" : "Siddh Shri Jorawar Dham Seva Samiti",
+        description: service ? (isHi ? service.titleHi : service.titleEn) : "दर्शन / सेवा बुकिंग",
+        order_id: order.orderId,
+        prefill: {
+          name: primaryName,
+          contact: primaryPhone,
+        },
+        theme: {
+          color: "#881337",
+        },
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                bookingId: bookingResult.id,
+                orderId: response.razorpay_order_id || order.orderId,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.success) {
+              setError(verifyData.error || "भुगतान सत्यापन विफल");
+            } else {
+              await loadConfirmedTicket(bookingResult.id);
+              setStep(4);
+            }
+          } catch {
+            setError("सत्यापन सर्वर से संपर्क नहीं हो सका");
+          } finally {
+            setActionLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setActionLoading(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (failResp: any) {
+        setError(failResp.error?.description || "भुगतान असफल रहा");
+        setActionLoading(false);
+      });
+      rzp.open();
+    } catch (err: any) {
+      setError(err?.message || "भुगतान प्रक्रिया में त्रुटि");
       setActionLoading(false);
     }
   };
@@ -229,6 +299,7 @@ export default function BookingWizardPage({
 
   return (
     <div className="py-10 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       {/* 1. Header & Stepper */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <Link

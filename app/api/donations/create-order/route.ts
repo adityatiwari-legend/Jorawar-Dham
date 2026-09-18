@@ -136,6 +136,7 @@ export async function POST(req: NextRequest) {
       gatewayOrderId: order.orderId,
       keyId: order.keyId,
       currency: order.currency,
+      isMock: order.isMock,
       donorName: donation.donorName,
       donorPhone,
       donorEmail: donation.donorEmail,

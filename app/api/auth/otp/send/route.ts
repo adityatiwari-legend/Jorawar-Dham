@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: result.message,
-      testOtp: result.testOtp, // Provided in development / test mode
+      testOtp: result.testOtp,
+      smsGatewayNotice: result.smsGatewayNotice,
     });
   } catch (error) {
     logger.error(`OTP send endpoint error: ${error}`);

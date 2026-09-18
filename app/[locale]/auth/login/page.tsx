@@ -22,6 +22,7 @@ function DevoteeLoginContent({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [testOtpNotice, setTestOtpNotice] = useState<string | null>(null);
+  const [smsNotice, setSmsNotice] = useState<string | null>(null);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +44,12 @@ function DevoteeLoginContent({
 
       if (data.testOtp) {
         setTestOtpNotice(data.testOtp);
+      }
+
+      if (data.smsGatewayNotice) {
+        setSmsNotice(data.smsGatewayNotice);
+      } else {
+        setSmsNotice(null);
       }
 
       setStep("OTP");
@@ -113,10 +120,36 @@ function DevoteeLoginContent({
             </div>
           )}
 
+          {smsNotice && (
+            <div className="bg-amber-50 border border-amber-300 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5 leading-relaxed">
+              <div className="flex items-center gap-1.5 font-bold text-amber-900">
+                <Sparkles className="w-4 h-4 text-amber-700 shrink-0" />
+                <span>Fast2SMS Gateway Status:</span>
+              </div>
+              <p className="font-mono text-[11px] bg-amber-100/70 p-2 rounded border border-amber-200 text-amber-900">
+                {smsNotice}
+              </p>
+              <p className="text-[11px] text-amber-800">
+                {isHi
+                  ? "Fast2SMS खाते में वेबसाइट सत्यापन अथवा ₹100 रिचार्ज होने तक, नीचे दिया गया OTP उपयोग करके लॉगिन करें।"
+                  : "Until Fast2SMS website verification or ₹100 minimum recharge is completed, use the OTP displayed below to sign in."}
+              </p>
+            </div>
+          )}
+
           {testOtpNotice && (
-            <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 text-xs text-amber-900 space-y-1">
-              <strong className="block font-semibold">परीक्षण OTP (Test OTP):</strong>
-              <span className="font-mono text-base font-bold tracking-widest text-maroon-900">{testOtpNotice}</span>
+            <div className="bg-emerald-50 border border-emerald-300 rounded-xl p-3.5 text-xs text-emerald-950 space-y-1">
+              <strong className="block font-semibold text-emerald-900">
+                {isHi ? "सत्यापन कोड (Devotee Login OTP):" : "Login OTP (Instant Access):"}
+              </strong>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xl font-bold tracking-widest text-emerald-800 bg-emerald-100/80 px-3 py-1 rounded-lg border border-emerald-300">
+                  {testOtpNotice}
+                </span>
+                <span className="text-[11px] text-emerald-700">
+                  ({isHi ? "यह कोड स्वतः दर्ज कर सकते हैं" : "Use this OTP above"})
+                </span>
+              </div>
             </div>
           )}
 

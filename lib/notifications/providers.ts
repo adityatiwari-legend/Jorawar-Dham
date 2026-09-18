@@ -35,10 +35,10 @@ export class ConsoleNotificationProvider implements NotificationProvider {
 }
 
 /**
- * Production SMS Provider (e.g. Fast2SMS / Twilio / MSG91)
+ * Production SMS Provider (Fast2SMS / Bulk SMS Gateway)
  */
 export class GenericSmsProvider implements NotificationProvider {
-  name = "SMS_GATEWAY";
+  name = "FAST2SMS";
   private apiKey: string;
 
   constructor() {
@@ -51,17 +51,51 @@ export class GenericSmsProvider implements NotificationProvider {
 
   async send(options: SendMessageOptions): Promise<SendResult> {
     if (!this.apiKey) {
-      // Fallback gracefully to mock in absence of live SMS gateway keys
       logger.warn("SMS_GATEWAY_API_KEY not configured. Falling back to log-only transmission.");
-      return { success: true, messageId: `sms_dev_${Date.now()}` };
+      return { success: true, messageId: `sms_mock_${Date.now()}` };
     }
 
     try {
-      // Plug in provider HTTP call here
-      return { success: true, messageId: `sms_${Date.now()}` };
+      const phone = options.recipient.phone?.replace(/\D/g, "").slice(-10);
+      if (!phone || phone.length !== 10) {
+        return { success: false, error: "Invalid 10-digit Indian phone number" };
+      }
+
+      const otp = options.params?.otp as string | undefined;
+      const requestBody = otp
+        ? {
+            variables_values: String(otp),
+            route: "otp",
+            numbers: phone,
+          }
+        : {
+            message: `Shri Jorawar Dham: ${options.template} ref: ${options.params?.reference || ""}`,
+            language: "english",
+            route: "q",
+            numbers: phone,
+          };
+
+      const res = await fetch("https://www.fast2sms.com/dev/bulkV2", {
+        method: "POST",
+        headers: {
+          authorization: this.apiKey.trim(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await res.json();
+      if (data.return) {
+        logger.info(`[FAST2SMS SUCCESS] SMS sent to ${phone.slice(0, 2)}****${phone.slice(-2)} (req: ${data.request_id})`);
+        return { success: true, messageId: data.request_id };
+      } else {
+        const errorMsg = Array.isArray(data.message) ? data.message.join(", ") : data.message || "Fast2SMS error";
+        logger.warn(`[FAST2SMS NOTICE] ${errorMsg} (status: ${data.status_code})`);
+        return { success: false, error: errorMsg };
+      }
     } catch (err: any) {
-      logger.error(`SMS dispatch failed: ${err?.message || err}`);
-      return { success: false, error: "SMS dispatch failed" };
+      logger.error(`SMS dispatch error: ${err?.message || err}`);
+      return { success: false, error: "SMS dispatch network error" };
     }
   }
 }

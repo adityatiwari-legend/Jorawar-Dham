@@ -58,7 +58,7 @@ export function hashSessionToken(token: string): string {
 export async function requestDevoteeOtp(
   phone: string,
   ipAddress?: string
-): Promise<{ success: boolean; message: string; cooldownSeconds?: number; testOtp?: string }> {
+): Promise<{ success: boolean; message: string; cooldownSeconds?: number; testOtp?: string; smsGatewayNotice?: string }> {
   const { valid, formatted } = validateIndianMobile(phone);
   if (!valid) {
     return { success: false, message: "कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें (Invalid 10-digit Indian mobile number)" };
@@ -114,17 +114,55 @@ export async function requestDevoteeOtp(
   // Log safe operational event (NO plaintext OTP in logs)
   logger.info(`OTP requested for identifier [${formatted.slice(0, 2)}****${formatted.slice(-2)}] from IP [${ipAddress || "unknown"}]`);
 
-  // In development / test mode without real SMS provider configured, return testOtp so automated tests and developers can proceed safely
-  const isDevOrTest = process.env.NODE_ENV !== "production" || process.env.ALLOW_TEST_OTP === "true";
+  // Attempt real SMS dispatch via Fast2SMS if API key is provided
+  let smsSent = false;
+  let smsGatewayNotice: string | undefined;
 
-  if (isDevOrTest) {
-    logger.info(`[DEV / TEST OTP] Generated OTP for [${formatted}]: ${otp}`);
+  const apiKey = process.env.SMS_GATEWAY_API_KEY;
+  if (apiKey && apiKey.trim() !== "") {
+    try {
+      const res = await fetch("https://www.fast2sms.com/dev/bulkV2", {
+        method: "POST",
+        headers: {
+          authorization: apiKey.trim(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          variables_values: otp,
+          route: "otp",
+          numbers: formatted.slice(-10),
+        }),
+      });
+      const data = await res.json();
+      if (data.return) {
+        smsSent = true;
+        logger.info(`[SMS SENT] OTP successfully transmitted to ${formatted.slice(0, 2)}****${formatted.slice(-2)} via Fast2SMS`);
+      } else {
+        smsGatewayNotice = Array.isArray(data.message) ? data.message.join(", ") : data.message;
+        logger.warn(`[FAST2SMS NOTICE] Fast2SMS returned: ${smsGatewayNotice} (Code: ${data.status_code})`);
+      }
+    } catch (smsErr: any) {
+      logger.error(`[SMS GATEWAY ERROR] Failed to reach Fast2SMS: ${smsErr?.message || smsErr}`);
+      smsGatewayNotice = "SMS Gateway network error";
+    }
+  }
+
+  // If real SMS was not sent (e.g. pending ₹100 recharge or website verification on Fast2SMS),
+  // OR if ALLOW_TEST_OTP is explicitly true or in development, expose the OTP so the user is never stuck
+  const allowTestOtp = process.env.ALLOW_TEST_OTP === "true" || process.env.NODE_ENV !== "production";
+  const shouldExposeOtp = allowTestOtp || !smsSent;
+
+  if (shouldExposeOtp) {
+    logger.info(`[DEV / TEST OTP] Active OTP for [${formatted}]: ${otp}`);
   }
 
   return {
     success: true,
-    message: "OTP आपके मोबाइल नंबर पर प्रेषित कर दिया गया है। (OTP sent successfully)",
-    testOtp: isDevOrTest ? otp : undefined,
+    message: smsSent
+      ? "OTP आपके मोबाइल नंबर पर SMS द्वारा प्रेषित कर दिया गया है। (OTP sent via SMS)"
+      : "OTP प्रेषित किया गया। (OTP generated)",
+    testOtp: shouldExposeOtp ? otp : undefined,
+    smsGatewayNotice,
   };
 }
 
